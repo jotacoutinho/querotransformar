@@ -10,6 +10,7 @@ import UIKit
 
 class ListViewController: UITableViewController {
     
+    
     var listSize : Int = 10
     var listContent : Array<Any> = Array()
 
@@ -17,7 +18,10 @@ class ListViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        //navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = "Tela Inicial"
+        
         //FIXME: mock function call (reminder)
         listContent = getListContent()
         tableView.register(ListCell.self, forCellReuseIdentifier: "cellId")
@@ -27,6 +31,12 @@ class ListViewController: UITableViewController {
         return listSize
     }
 
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let servicesViewController = ServicesViewController()
+        tableView.deselectRow(at: indexPath, animated: true)
+        present(servicesViewController, animated: true)
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
     }
@@ -47,7 +57,7 @@ class ListCell: UITableViewCell {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) not implemented yet")
+        fatalError("init(coder:) has not been implemented")
     }
     
     let nameLabel: UILabel = {
