@@ -16,10 +16,9 @@ class ListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
+        //title setup
         self.navigationController?.navigationBar.prefersLargeTitles = true
-        //navigationItem.largeTitleDisplayMode = .always
         navigationItem.title = "Tela Inicial"
         
         //FIXME: mock function call (reminder)
@@ -41,6 +40,7 @@ class ListViewController: UITableViewController {
         return tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath)
     }
     
+    //row height setup
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UIFont.systemFont(ofSize: 24).pointSize*2
     }
@@ -68,6 +68,7 @@ class ListCell: UITableViewCell {
         return label
     }()
     
+    //adds subviews + constraints setup
     func setupViews(){
         addSubview(nameLabel)
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0":nameLabel]))

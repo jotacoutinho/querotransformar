@@ -10,39 +10,42 @@ import UIKit
 
 class ServicesViewController: UIViewController {
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        loadView()
-        
-        navigationController?.navigationItem.titleView?.isHidden = true
-        view.backgroundColor = .white
-    }
-    
-    override func loadView() {
-        self.view = ServicesMainView(frame: UIScreen.main.bounds)
-    }
-}
-
-class ServicesMainView: UIView{
-    override init(frame: CGRect){
-        super.init(frame: frame)
-        setupViews()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     let servicesLabel : UILabel = {
         let label = UILabel()
         label.text = "Serviços"
         label.translatesAutoresizingMaskIntoConstraints = false
-        //servicesLabel.center = view.center
         return label
     }()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        //view setup
+        navigationController?.navigationItem.titleView?.isHidden = true
+        view.backgroundColor = .white
+        setupViews()
+        
+        //servicesLabel action setup
+        servicesLabel.isUserInteractionEnabled = true
+        servicesLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.servicesLabelAction)))
+    }
+    
+    //adds subviews + constraints setup
     func setupViews(){
-        addSubview(servicesLabel)
+        //adding views
+        view.addSubview(servicesLabel)
+        
+        //centralizing servicesLabel
+        servicesLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        servicesLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        
+        //other views
+        //addConstraints
+        //...
+    }
+    
+    //returns to main screen (development purpose only)
+    @objc func servicesLabelAction(sender: UITapGestureRecognizer){
+        dismiss(animated: true)
     }
 }
