@@ -32,8 +32,13 @@ class ListViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let servicesViewController = ServicesViewController()
+        
+        //collection view layout setup
+        let flowLayout = UICollectionViewFlowLayout()
+        let mainViewController = MainViewController(collectionViewLayout: flowLayout)
+        
         tableView.deselectRow(at: indexPath, animated: true)
-        present(servicesViewController, animated: true)
+        present(mainViewController, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
