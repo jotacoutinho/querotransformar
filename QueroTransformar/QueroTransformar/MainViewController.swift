@@ -47,8 +47,10 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 }
 
 class BottomCell: UICollectionViewCell {
+    var viewFrame : CGRect = CGRect()
     override init(frame: CGRect){
         super.init(frame: frame)
+        viewFrame = frame
         self.backgroundColor = .white
         self.contentView.isUserInteractionEnabled = false
         setupViews()
@@ -138,48 +140,52 @@ class BottomCell: UICollectionViewCell {
         return label
     }()
     
+    let line1px : UIView = {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
+        view.backgroundColor = .red
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let textDescription : UILabel = {
+        let text = UILabel()
+        text.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa."
+        text.font = UIFont.systemFont(ofSize: 14)
+        text.numberOfLines = 0
+        text.textAlignment = .justified
+        text.backgroundColor = .green
+        text.translatesAutoresizingMaskIntoConstraints = false
+        return text
+    }()
+    
     //adds subviews + constraints setup
     func setupViews(){
         
         let padding = 16
         
-        let buttonsStack : UIStackView = {
-            let stack = UIStackView()
-            stack.translatesAutoresizingMaskIntoConstraints = false
-            return stack
-        }()
-        
-        let labelsStack : UIStackView = {
-            let stack = UIStackView()
-            stack.translatesAutoresizingMaskIntoConstraints = false
-            return stack
-        }()
-        
         //adding views
-        addSubview(buttonsStack)
-        addSubview(labelsStack)
-        
-        //adding buttons to stack
-        buttonsStack.addSubview(callButton)
-        buttonsStack.addSubview(servicesButton)
-        buttonsStack.addSubview(locationButton)
-        buttonsStack.addSubview(commentsButton)
-        buttonsStack.addSubview(favoritesButton)
-        
-        //adding labels to stack
-        labelsStack.addSubview(callLabel)
-        labelsStack.addSubview(servicesLabel)
-        labelsStack.addSubview(locationLabel)
-        labelsStack.addSubview(commentsLabel)
-        labelsStack.addSubview(favoritesLabel)
+        addSubview(line1px)
+        addSubview(textDescription)
+    
+        addSubview(callButton)
+        addSubview(servicesButton)
+        addSubview(locationButton)
+        addSubview(commentsButton)
+        addSubview(favoritesButton)
+    
+        addSubview(callLabel)
+        addSubview(servicesLabel)
+        addSubview(locationLabel)
+        addSubview(commentsLabel)
+        addSubview(favoritesLabel)
         
         //constraint setup for buttons
-        //FIXME: 50px is the image size for 1x
+        //FIXME: 50px is the image size for 1x | only if all buttons have the same size
         //TODO: fix "?? 50" to imageAppropriateSize, where imageAppropriateSize == image.size (based on device)
         let buttonSize = callButton.currentImage?.size.width ?? CGFloat(integerLiteral: 50)
         let buttonSpacing = (self.frame.size.width - (5 * buttonSize) - CGFloat(2 * padding)) / 4
         
-        buttonsStack.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]-\(buttonSpacing)-[v1]-\(buttonSpacing)-[v2]-\(buttonSpacing)-[v3]-\(buttonSpacing)-[v4]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0":callButton, "v1":servicesButton, "v2":locationButton, "v3":commentsButton, "v4":favoritesButton]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-\(buttonSpacing)-[v1]-\(buttonSpacing)-[v2]-\(buttonSpacing)-[v3]-\(buttonSpacing)-[v4]-\(padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0":callButton, "v1":servicesButton, "v2":locationButton, "v3":commentsButton, "v4":favoritesButton]))
     
         //constraint setup for labels
         callLabel.centerXAnchor.constraint(equalTo: callButton.centerXAnchor).isActive = true
@@ -188,23 +194,26 @@ class BottomCell: UICollectionViewCell {
         commentsLabel.centerXAnchor.constraint(equalTo: commentsButton.centerXAnchor).isActive = true
         favoritesLabel.centerXAnchor.constraint(equalTo: favoritesButton.centerXAnchor).isActive = true
         
-        //constraint setup buttons x labels (vertical padding)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": callButton, "v1": callLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": servicesButton, "v1": servicesLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": locationButton, "v1": locationLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": commentsButton, "v1": commentsLabel]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": favoritesButton, "v1": favoritesLabel]))
-
-        //constraint setup for cell
-         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-\(padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": buttonsStack]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-\(padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": labelsStack]))
+        //constraint setup for 1px line
+        let heightConstraintLine1px = line1px.heightAnchor.constraint(equalToConstant: 1)
+        
+        addConstraints([heightConstraintLine1px])
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-\(padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": line1px]))
+        
+        //constraint setup for text description
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-\(padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": textDescription]))
         
         //other views
         //addConstraints
         //...
+        
+        //constraint setup for cell structure (vertical padding)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": callButton, "v1": callLabel, "v2": textDescription, "v3": line1px]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": servicesButton, "v1": servicesLabel, "v2": textDescription, "v3": line1px]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": locationButton, "v1": locationLabel, "v2": textDescription, "v3": line1px]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": commentsButton, "v1": commentsLabel, "v2": textDescription, "v3": line1px]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": favoritesButton, "v1": favoritesLabel, "v2": textDescription, "v3": line1px]))
     }
-    
-    
 }
 
 class TopCell: UICollectionViewCell {
