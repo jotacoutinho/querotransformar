@@ -20,6 +20,22 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 
         collectionView.register(TopCell.self, forCellWithReuseIdentifier: "topCellId")
         collectionView.register(BottomCell.self, forCellWithReuseIdentifier: "bottomCellId")
+        
+        
+        //navigation bar setup
+
+        let navItem = UINavigationItem()
+        navItem.title = "(icon) City - Neighborhood"
+        navItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: nil)
+        navItem.rightBarButtonItem = UIBarButtonItem(title: "Search", style: .plain, target: self, action: nil)
+        
+        //FIXME
+        let height = UINavigationController().navigationBar.frame.size.height
+        let navbar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: height))
+        navbar.backgroundColor = .white
+        navbar.items = [navItem]
+        
+        collectionView.addSubview(navbar)
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
