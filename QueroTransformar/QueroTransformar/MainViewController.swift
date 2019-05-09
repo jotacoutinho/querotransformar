@@ -21,21 +21,56 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView.register(TopCell.self, forCellWithReuseIdentifier: "topCellId")
         collectionView.register(BottomCell.self, forCellWithReuseIdentifier: "bottomCellId")
         
-        
+        //FIXME: create func (code modularization)
         //navigation bar setup
-
         let navItem = UINavigationItem()
-        navItem.title = "(icon) City - Neighborhood"
         navItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: nil)
-        navItem.rightBarButtonItem = UIBarButtonItem(title: "Search", style: .plain, target: self, action: nil)
+        navItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "search_button"), style: .plain, target: self, action: #selector(self.pressedBackButton))
+        
+        //navigation bar title setup (image + text)
+        let titleView = UIView()
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "City - Neighborhood"
+        titleLabel.sizeToFit()
+        titleLabel.center = titleView.center
+        titleLabel.textAlignment = NSTextAlignment.center
+        
+        let locationTitleImage = UIImageView(image: UIImage(named: "location_button"))
+        // Maintains the image's aspect ratio:
+        let imageAspect = locationTitleImage.image!.size.width / locationTitleImage.image!.size.height
+        
+        // Sets the image frame so that it's immediately before the text:
+        let imageX = titleLabel.frame.origin.x - titleLabel.frame.size.height * imageAspect
+        let imageY = titleLabel.frame.origin.y
+        
+        let imageWidth = titleLabel.frame.size.height * imageAspect
+        let imageHeight = titleLabel.frame.size.height
+        
+        locationTitleImage.frame = CGRect(x: imageX, y: imageY, width: imageWidth, height: imageHeight)
+        
+        locationTitleImage.contentMode = UIView.ContentMode.scaleAspectFit
+        
+        //adding titleView
+        titleView.addSubview(locationTitleImage)
+        titleView.addSubview(titleLabel)
+        titleView.sizeToFit()
+        
+        navItem.titleView = titleView
         
         //FIXME
         let height = UINavigationController().navigationBar.frame.size.height
         let navbar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: height))
-        navbar.backgroundColor = .white
+        navbar.barTintColor = UIColor(red: 203, green: 138, blue: 25, alpha: 1)
+        navbar.backgroundColor = .green
+        navbar.tintColor = .red
         navbar.items = [navItem]
         
         collectionView.addSubview(navbar)
+    }
+    
+    @objc func pressedBackButton(){
+        self.dismiss(animated: true)
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
