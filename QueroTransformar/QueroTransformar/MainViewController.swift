@@ -32,6 +32,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         
         let titleLabel = UILabel()
         titleLabel.text = "City - Neighborhood"
+        titleLabel.textColor = .white
         titleLabel.sizeToFit()
         titleLabel.center = titleView.center
         titleLabel.textAlignment = NSTextAlignment.center
@@ -61,9 +62,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         //FIXME
         let height = UINavigationController().navigationBar.frame.size.height
         let navbar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: height))
-        navbar.barTintColor = UIColor(red: 203, green: 138, blue: 25, alpha: 1)
-        navbar.backgroundColor = .green
-        navbar.tintColor = .red
+        
+        navbar.barTintColor = .blue//UIColor(red: 203, green: 138, blue: 25, alpha: 1)
+        navbar.tintColor = .white
         navbar.items = [navItem]
         
         collectionView.addSubview(navbar)
@@ -270,10 +271,40 @@ class BottomCell: UICollectionViewCell {
 class TopCell: UICollectionViewCell {
     override init(frame: CGRect){
         super.init(frame: frame)
-        //setupViews()
+        self.contentView.isUserInteractionEnabled = false
+        setupViews()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    let pictureImageView : UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "picture"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let titleLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Mock Title"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .blue //UIColor(red: 203, green: 138, blue: 25, alpha: 1)
+        return label
+    }()
+    
+    func setupViews(){
+        
+        addSubview(pictureImageView)
+        addSubview(titleLabel)
+        
+        let widthConstraintPicture = pictureImageView.widthAnchor.constraint(equalToConstant: self.frame.size.width)
+        let heightConstraintPicture = pictureImageView.heightAnchor.constraint(equalToConstant: self.frame.size.height)
+        addConstraint(widthConstraintPicture)
+        addConstraint(heightConstraintPicture)
+        //addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": pictureImageView]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": titleLabel]))
+        
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0][v1]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": pictureImageView, "v1": titleLabel]))
     }
 }
