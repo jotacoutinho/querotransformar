@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import MapKit
 
 class MainViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let topCellId = "topCellId"
     let bottomCellId = "bottomCellId"
+    var navBar = UINavigationBar()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,13 +23,22 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         collectionView.register(TopCell.self, forCellWithReuseIdentifier: "topCellId")
         collectionView.register(BottomCell.self, forCellWithReuseIdentifier: "bottomCellId")
         
-        //FIXME: create func (code modularization)
-        //navigation bar setup
+        //nav bar setup
+        configureNavBar()
+        collectionView.addSubview(self.navBar)
+    }
+    
+    @objc func pressedBackButton(){
+        self.dismiss(animated: true)
+    }
+    
+    func configureNavBar(){
+        //navigation items
         let navItem = UINavigationItem()
-        navItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: self, action: nil)
+        navItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button"), style: .plain, target: self, action: #selector(self.pressedBackButton))
         navItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "search_button"), style: .plain, target: self, action: #selector(self.pressedBackButton))
         
-        //navigation bar title setup (image + text)
+        //title setup (image + text)
         let titleView = UIView()
         
         let titleLabel = UILabel()
@@ -36,42 +47,32 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         titleLabel.sizeToFit()
         titleLabel.center = titleView.center
         titleLabel.textAlignment = NSTextAlignment.center
-        
-        let locationTitleImage = UIImageView(image: UIImage(named: "location_button"))
-        // Maintains the image's aspect ratio:
+    
+        //image's aspect ratio
+        let locationTitleImage = UIImageView(image: UIImage(named: "location_white"))
         let imageAspect = locationTitleImage.image!.size.width / locationTitleImage.image!.size.height
         
-        // Sets the image frame so that it's immediately before the text:
+        //image frame immediately before the text
         let imageX = titleLabel.frame.origin.x - titleLabel.frame.size.height * imageAspect
         let imageY = titleLabel.frame.origin.y
-        
         let imageWidth = titleLabel.frame.size.height * imageAspect
         let imageHeight = titleLabel.frame.size.height
         
         locationTitleImage.frame = CGRect(x: imageX, y: imageY, width: imageWidth, height: imageHeight)
-        
         locationTitleImage.contentMode = UIView.ContentMode.scaleAspectFit
         
-        //adding titleView
+        //adding views
         titleView.addSubview(locationTitleImage)
         titleView.addSubview(titleLabel)
         titleView.sizeToFit()
-        
         navItem.titleView = titleView
-        
-        //FIXME
-        let height = UINavigationController().navigationBar.frame.size.height
-        let navbar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: height))
-        
-        navbar.barTintColor = .blue//UIColor(red: 203, green: 138, blue: 25, alpha: 1)
-        navbar.tintColor = .white
-        navbar.items = [navItem]
-        
-        collectionView.addSubview(navbar)
-    }
     
-    @objc func pressedBackButton(){
-        self.dismiss(animated: true)
+        //nav bar configuration
+        let height = UINavigationController().navigationBar.frame.size.height
+        self.navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: height))
+        self.navBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        self.navBar.tintColor = .white
+        self.navBar.items = [navItem]
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -93,8 +94,13 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 //        return 2
 //    }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height/2)
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {   
+        
+        if(indexPath.item == 0){
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height/2)
+        } else{
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+        }
     }
 }
 
@@ -116,7 +122,7 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "call_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .red
+//        button.backgroundColor = .red
         return button
     }()
     
@@ -124,7 +130,7 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "services_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .blue
+//        button.backgroundColor = .blue
         return button
     }()
     
@@ -132,7 +138,7 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "location_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .red
+//        button.backgroundColor = .red
         return button
     }()
     
@@ -140,7 +146,7 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "comments_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .blue
+//        button.backgroundColor = .blue
         return button
     }()
     
@@ -148,7 +154,7 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "favorites_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.backgroundColor = .red
+//        button.backgroundColor = .red
         return button
     }()
     
@@ -157,6 +163,7 @@ class BottomCell: UICollectionViewCell {
         label.text = "Ligar"
         label.font = UIFont.systemFont(ofSize: 10)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
         return label
     }()
     
@@ -165,6 +172,7 @@ class BottomCell: UICollectionViewCell {
         label.text = "Serviços"
         label.font = UIFont.systemFont(ofSize: 10)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
         return label
     }()
     
@@ -173,6 +181,7 @@ class BottomCell: UICollectionViewCell {
         label.text = "Endereço"
         label.font = UIFont.systemFont(ofSize: 10)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
         return label
     }()
     
@@ -181,6 +190,7 @@ class BottomCell: UICollectionViewCell {
         label.text = "Comentários"
         label.font = UIFont.systemFont(ofSize: 10)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
         return label
     }()
     
@@ -189,25 +199,43 @@ class BottomCell: UICollectionViewCell {
         label.text = "Favoritos"
         label.font = UIFont.systemFont(ofSize: 10)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
         return label
     }()
     
     let line1px : UIView = {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = .red
+        view.backgroundColor = .lightGray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
     let textDescription : UILabel = {
         let text = UILabel()
-        text.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa."
+        text.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam eget ligula eu lectus lobortis condimentum. Aliquam nonummy auctor massa."
         text.font = UIFont.systemFont(ofSize: 14)
         text.numberOfLines = 0
         text.textAlignment = .justified
-        text.backgroundColor = .green
+        text.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
+    }()
+    
+    let mapView : MKMapView = {
+        let map = MKMapView()
+        map.translatesAutoresizingMaskIntoConstraints = false
+        return map
+    }()
+    
+    let mapLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Rua dos Mockados, 41"
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.backgroundColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        label.textColor = .white
+        label.textAlignment = .right
+        return label
     }()
     
     //adds subviews + constraints setup
@@ -218,6 +246,8 @@ class BottomCell: UICollectionViewCell {
         //adding views
         addSubview(line1px)
         addSubview(textDescription)
+        addSubview(mapView)
+        addSubview(mapLabel)
     
         addSubview(callButton)
         addSubview(servicesButton)
@@ -255,16 +285,25 @@ class BottomCell: UICollectionViewCell {
         //constraint setup for text description
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-\(padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": textDescription]))
         
+        //constraint setup for map view
+        let heightConstraintMapView = mapView.heightAnchor.constraint(equalToConstant: 100)
+        addConstraint(heightConstraintMapView)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": mapView]))
+        
+        //constraint setup for map label
+        let widthConstraintMapLabel = mapLabel.widthAnchor.constraint(equalToConstant: self.frame.size.width)
+        addConstraint(widthConstraintMapLabel)
+        
         //other views
         //addConstraints
         //...
         
         //constraint setup for cell structure (vertical padding)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": callButton, "v1": callLabel, "v2": textDescription, "v3": line1px]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": servicesButton, "v1": servicesLabel, "v2": textDescription, "v3": line1px]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": locationButton, "v1": locationLabel, "v2": textDescription, "v3": line1px]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": commentsButton, "v1": commentsLabel, "v2": textDescription, "v3": line1px]))
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": favoritesButton, "v1": favoritesLabel, "v2": textDescription, "v3": line1px]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]-[v4][v5]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": callButton, "v1": callLabel, "v2": textDescription, "v3": line1px, "v4": mapView, "v5": mapLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]-[v4][v5]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": servicesButton, "v1": servicesLabel, "v2": textDescription, "v3": line1px, "v4": mapView, "v5": mapLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]-[v4][v5]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": locationButton, "v1": locationLabel, "v2": textDescription, "v3": line1px, "v4": mapView, "v5": mapLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]-[v4][v5]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": commentsButton, "v1": commentsLabel, "v2": textDescription, "v3": line1px, "v4": mapView, "v5": mapLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]-[v4][v5]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": favoritesButton, "v1": favoritesLabel, "v2": textDescription, "v3": line1px, "v4": mapView, "v5": mapLabel]))
     }
 }
 
@@ -280,8 +319,9 @@ class TopCell: UICollectionViewCell {
     }
     
     let pictureImageView : UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "picture"))
+        let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.backgroundColor = .orange
         return imageView
     }()
     
@@ -289,7 +329,9 @@ class TopCell: UICollectionViewCell {
         let label = UILabel()
         label.text = "Mock Title"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .blue //UIColor(red: 203, green: 138, blue: 25, alpha: 1)
+        label.font = UIFont.systemFont(ofSize: 24)
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+//        label.backgroundColor = .blue
         return label
     }()
     
@@ -297,14 +339,13 @@ class TopCell: UICollectionViewCell {
         
         addSubview(pictureImageView)
         addSubview(titleLabel)
+    
+        //TODO: constraint setup for imageview (view only, no image yet) --> Add image + constraints to fill
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": pictureImageView]))
         
-        let widthConstraintPicture = pictureImageView.widthAnchor.constraint(equalToConstant: self.frame.size.width)
-        let heightConstraintPicture = pictureImageView.heightAnchor.constraint(equalToConstant: self.frame.size.height)
-        addConstraint(widthConstraintPicture)
-        addConstraint(heightConstraintPicture)
-        //addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": pictureImageView]))
+        //constraint setup for label
+        let labelBottomConstraint = titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+        addConstraint(labelBottomConstraint)
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": titleLabel]))
-        
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0][v1]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": pictureImageView, "v1": titleLabel]))
     }
 }
