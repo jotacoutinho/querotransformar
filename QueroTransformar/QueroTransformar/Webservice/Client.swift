@@ -11,8 +11,11 @@ import Foundation
 class Client{
     
     static let shared = Client()
-    var session : URLSession
-    var itemList : Array<Any> = Array()
+    var session: URLSession
+    var itemList: Array<Any> = Array()
+    var item: EntityItem?
+    var comments: [EntityComment]?
+    
     
     fileprivate init(){
         let configuration = URLSessionConfiguration.default
@@ -62,7 +65,7 @@ class Client{
             }.resume()
     }
     
-    func getItem(id: String){
+    func getItem(id: String, completionHandler: @escaping (_ success : Bool) -> Void){
         //FIXME: add id
         let urlString = "http://dev.4all.com:3003/tarefa/\(id)"
         print("requesting url: \(urlString)")
@@ -81,20 +84,32 @@ class Client{
                     
                     guard let info = Coder().decodeFromJSONData(data: data, type: Constants.Item.self) else {
                         //err parsing data
+                        completionHandler(false)
                         return
                     }
                     
-                    print(info)
-                    //parse info.attributes
-                    //titulo = info.titulo
-                    //
-                    //...
+                    //print(info)
                     
+                    //parsing retrived data
+                    var commentsArray = Array<EntityComment>()
+                    info.comentarios.forEach{
+                        comment in
+                        
+                        let currentComment = EntityComment(urlFoto: comment.urlFoto, nome: comment.nome, nota: comment.nota, titulo: comment.titulo, comentario: comment.comentario)
+                        
+                        commentsArray.append(currentComment)
+                    }
+                    
+                    self.item = EntityItem(id: info.id, cidade: info.cidade, bairro: info.bairro, urlFoto: info.urlFoto, urlLogo: info.urlLogo, titulo: info.titulo, telefone: info.telefone, texto: info.texto, endereco: info.endereco, latitude: info.latitude, longitude: info.longitude, comentarios: commentsArray)
+                    
+                    completionHandler(true)
                     break
                 case 400:
                     //bad request
+                    completionHandler(false)
                     break
                 default:
+                    completionHandler(false)
                     print("GET request got response \(statusCode)")
                 }
         }.resume()

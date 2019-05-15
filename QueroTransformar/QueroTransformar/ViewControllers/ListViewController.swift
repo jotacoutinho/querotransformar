@@ -27,6 +27,7 @@ class ListViewController: UITableViewController {
         //ws to get list content (with an idle loading view)
         getListContent()
         showLoadingView()
+    
         tableView.register(ListCell.self, forCellReuseIdentifier: "cellId")
     }
     
@@ -39,15 +40,40 @@ class ListViewController: UITableViewController {
         
         //get content info
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ListCell
-        //FIXME: when error occurs, will donwload first known item
-        Client.shared.getItem(id: Client.shared.itemList[indexPath.item] as! String)
         
-        //collection view layout setup
-//        let flowLayout = UICollectionViewFlowLayout()
-//        let mainViewController = MainViewController(collectionViewLayout: flowLayout)
-//
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        present(mainViewController, animated: true)
+        //FIXME: when error occurs, will donwload first known item
+        showLoadingView()
+        Client.shared.getItem(id: Client.shared.itemList[indexPath.item] as! String){
+            success in
+            
+            //ui update on main thread
+            DispatchQueue.main.async {
+                self.loadingView.isHidden = true
+                self.container.isHidden = true
+                self.loadingController.stopAnimating()
+                self.tableView.reloadData()
+            }
+            
+            if(!success){
+                //couldn`t donwload list
+                let alert = UIAlertController(title: "Oops!", message: "Algo deu errado ao tentar realizar o download do item :(", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Descartar", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            } else{
+                //download ok
+                //collection view layout setup
+                let flowLayout = UICollectionViewFlowLayout()
+                let mainViewController = MainViewController(collectionViewLayout: flowLayout)
+                
+                tableView.deselectRow(at: indexPath, animated: true)
+                
+                //presenting on main thread
+                DispatchQueue.main.async {
+                    self.present(mainViewController, animated: true)
+                }
+                
+            }
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -71,8 +97,7 @@ class ListViewController: UITableViewController {
                 self.present(alert, animated: true, completion: nil)
             } else{
                 //download ok
-                //FIXME
-                self.listSize = 4
+                self.listSize = Client.shared.itemList.count
             }
             //ui update on main thread
             DispatchQueue.main.async {
@@ -84,6 +109,7 @@ class ListViewController: UITableViewController {
         }
     }
     
+    //spinning view for loading
     func showLoadingView(){
         self.container.frame = self.view.frame
         self.container.center = self.view.center

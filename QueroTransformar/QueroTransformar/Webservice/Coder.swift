@@ -15,7 +15,7 @@ class Coder {
         
         do {
             let decodedData = try JSONDecoder().decode(type, from: data)
-            print("Successfully decoded data of type \(type).")
+            //print("Successfully decoded data of type \(type).")
             return decodedData
         }
         catch {
