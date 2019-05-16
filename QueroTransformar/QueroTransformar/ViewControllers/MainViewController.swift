@@ -13,19 +13,65 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     let topCellId = "topCellId"
     let bottomCellId = "bottomCellId"
+    let headerId = "headerId"
     var navBar = UINavigationBar()
+    let padding = 16
+    
+    let titleLabel : UILabel = {
+        let label = UILabel()
+        label.text = Client.shared.item?.titulo ?? "Mock Title"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        //        label.backgroundColor = .blue
+        return label
+    }()
+    
+    let titleLabelView : UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let headerPicture : UIImageView = {
+        let view = UIImageView()
+        //FIXME
+        DispatchQueue.main.async{
+            let data = try? Data(contentsOf: URL(string: (Client.shared.item?.urlFoto)!)!)
+            print(Client.shared.item?.urlFoto)
+            view.image = UIImage(data: data!)
+            //view.image = UIImage(named: "favorites_button")
+        }
+        //view.image = UIImage(named: "favorites_button")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        //view.sizeToFit()
+        view.backgroundColor = .blue
+        return view
+    }()
+    
+    let logoPicture : UIImageView = {
+        let view = UIImageView()
+        DispatchQueue.main.async{
+            //FIXME
+            let data = try? Data(contentsOf: URL(string: (Client.shared.item?.urlLogo)!)!)
+            view.image = UIImage(data: data!)
+        }
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        return view
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.backgroundColor = UIColor.lightGray
+        collectionView.backgroundColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
 
-        collectionView.register(TopCell.self, forCellWithReuseIdentifier: "topCellId")
+        //collectionView.register(TopCell.self, forCellWithReuseIdentifier: "topCellId")
         collectionView.register(BottomCell.self, forCellWithReuseIdentifier: "bottomCellId")
-        
+        collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
         //nav bar setup
         configureNavBar()
-        collectionView.addSubview(self.navBar)
+        //collectionView.addSubview(self.navBar)
         
         //debug: printing downloaded item
 //        print("Downloaded item id:\n")
@@ -84,16 +130,16 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //multiple cell layouts for main collection view
         if(indexPath.item == 0){
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "topCellId", for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: bottomCellId, for: indexPath)
             return cell
         } else{
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bottomCellId", for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: topCellId, for: indexPath)
             return cell
         }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        return 1
     }
     
 //    override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -103,10 +149,70 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {   
         
         if(indexPath.item == 0){
-            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height/2)
-        } else{
+            //main cell
             return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+        } else{
+            //comments
+            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height/3)
         }
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
+        
+        //FIXME: setupViews() for header
+        header.backgroundColor = UIColor(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1.0)
+        header.addSubview(self.navBar)
+        header.addSubview(self.titleLabelView)
+        header.addSubview(self.headerPicture)
+        header.addSubview(self.logoPicture)
+        
+        //constraints
+        self.navBar.topAnchor.constraint(equalTo: header.topAnchor).isActive = true
+        self.titleLabelView.bottomAnchor.constraint(equalTo: header.bottomAnchor).isActive = true
+        self.headerPicture.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
+        //self.headerPicture.bottomAnchor.constraint(equalTo: navBar.topAnchor).isActive = true
+        self.headerPicture.widthAnchor.constraint(equalToConstant: navBar.frame.size.width)
+        
+        //let pictureHeight = collectionView.frame.size.height - navBar.frame.size.height - titleLabel.frame.size.height
+        //self.headerPicture.heightAnchor.constraint(equalToConstant: 100)
+        //self.headerPicture.sizeToFit()
+        
+        //FIXME
+        header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0][v1][v2]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.navBar, "v1": self.headerPicture, "v2": self.titleLabelView]))
+        //header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.titleLabel]))
+        
+        //titlelabel view
+        titleLabelView.addSubview(titleLabel)
+        let widthConstraintMapLabel = titleLabelView.widthAnchor.constraint(equalToConstant: collectionView.frame.size.width)
+        let heightConstraintMapLabel = titleLabelView.heightAnchor.constraint(equalToConstant: 60)
+        header.addConstraints([widthConstraintMapLabel,heightConstraintMapLabel])
+        header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[v0]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": titleLabelView]))
+        
+        titleLabelView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.titleLabel]))
+        titleLabelView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.titleLabel]))
+        
+        //FIXME: icon dimensions
+        logoPicture.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        logoPicture.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        logoPicture.layer.cornerRadius = 50
+        
+        logoPicture.centerYAnchor.constraint(equalTo: self.titleLabelView.topAnchor).isActive = true
+        //logoPicture.rightAnchor.constraint(equalTo: (self.navigationItem.rightBarButtonItem?.customView?.leftAnchor)!).isActive = true
+        let leftPaddingConstraintForLogo = collectionView.frame.size.width - 100.0 - CGFloat(padding)
+        header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(leftPaddingConstraintForLogo)-[v0]-\(padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.logoPicture]))
+        
+        //header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]-\(3*padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.logoPicture]))
+        
+        //FIXME
+        //let logoOffset = collectionView.frame.size.width * 1/4
+        //logoPicture.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor, constant: logoOffset)
+        
+        return header
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height/2)
     }
 }
 
