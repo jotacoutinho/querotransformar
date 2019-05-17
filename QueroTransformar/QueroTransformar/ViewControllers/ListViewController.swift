@@ -11,6 +11,7 @@ import UIKit
 class ListViewController: UITableViewController {
     var listSize : Int = 0
     var listContent : Array<Any> = Array()
+    static let mainVC = MainViewController()
     
     //spinning view
     let loadingController = UIActivityIndicatorView()
@@ -46,14 +47,6 @@ class ListViewController: UITableViewController {
         Client.shared.getItem(id: Client.shared.itemList[indexPath.item] as! String){
             success in
             
-            //ui update on main thread
-            DispatchQueue.main.async {
-                self.loadingView.isHidden = true
-                self.container.isHidden = true
-                self.loadingController.stopAnimating()
-                self.tableView.reloadData()
-            }
-            
             if(!success){
                 //couldn`t donwload list
                 let alert = UIAlertController(title: "Oops!", message: "Algo deu errado ao tentar realizar o download do item :(", preferredStyle: .alert)
@@ -71,7 +64,14 @@ class ListViewController: UITableViewController {
                 DispatchQueue.main.async {
                     self.present(mainViewController, animated: true)
                 }
-                
+            }
+            
+            //ui update on main thread
+            DispatchQueue.main.async {
+                self.loadingView.isHidden = true
+                self.container.isHidden = true
+                self.loadingController.stopAnimating()
+                self.tableView.reloadData()
             }
         }
     }

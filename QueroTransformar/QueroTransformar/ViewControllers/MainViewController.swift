@@ -11,12 +11,13 @@ import MapKit
 
 class MainViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    let topCellId = "topCellId"
-    let bottomCellId = "bottomCellId"
+    let commentsCellId = "commentsCellId"
+    let mainCellId = "mainCellId"
     let headerId = "headerId"
+    let footerId = "footerId"
     var navBar = UINavigationBar()
     let padding = 16
-    
+
     let titleLabel : UILabel = {
         let label = UILabel()
         label.text = Client.shared.item?.titulo ?? "Mock Title"
@@ -64,19 +65,22 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        collectionView.backgroundColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
-
-        //collectionView.register(TopCell.self, forCellWithReuseIdentifier: "topCellId")
-        collectionView.register(BottomCell.self, forCellWithReuseIdentifier: "bottomCellId")
+        //collectionView.backgroundColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        collectionView.backgroundColor = .white
+        
+        //cells register
+        collectionView.register(CommentCell.self, forCellWithReuseIdentifier: commentsCellId)
+        collectionView.register(BottomCell.self, forCellWithReuseIdentifier: mainCellId)
         collectionView.register(UICollectionViewCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
+        
         //nav bar setup
         configureNavBar()
-        //collectionView.addSubview(self.navBar)
         
-        //debug: printing downloaded item
-//        print("Downloaded item id:\n")
-//        print(Client.shared.item?.id)
-        
+        //notifications for button actions
+        NotificationCenter.default.addObserver(self, selector: #selector(callAction), name: NSNotification.Name(rawValue: "call"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(servicesAction), name: NSNotification.Name(rawValue: "services"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(locationAction), name: NSNotification.Name(rawValue: "location"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(commentsAction), name: NSNotification.Name(rawValue: "comments"), object: nil)
     }
     
     @objc func pressedBackButton(){
@@ -95,6 +99,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         titleLabel.text = Client.shared.item?.cidade ?? "City"
         titleLabel.text?.append(" - ")
         titleLabel.text?.append(Client.shared.item?.bairro ?? "Neigborhood")
+        titleLabel.font = UIFont.systemFont(ofSize: 14)
         titleLabel.textColor = .white
         titleLabel.sizeToFit()
         titleLabel.center = titleView.center
@@ -130,16 +135,18 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         //multiple cell layouts for main collection view
         if(indexPath.item == 0){
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: bottomCellId, for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: mainCellId, for: indexPath)
             return cell
         } else{
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: topCellId, for: indexPath)
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: commentsCellId, for: indexPath)
             return cell
         }
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        print(Client.shared.item?.comentarios.count)
+        return (Client.shared.item?.comentarios.count ?? 0) + 1
+        //return 2
     }
     
 //    override func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -148,6 +155,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {   
         
+        //FIXME: dynamic heights
         if(indexPath.item == 0){
             //main cell
             return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
@@ -158,40 +166,60 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
         
-        //FIXME: setupViews() for header
+        //if(kind == UICollectionView.elementKindSectionHeader){
+            let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
+            setupHeaderViews(header: header)
+            return header
+        //}
+    }
+    
+    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+//        return CGSize(width: collectionView.frame.width, height: 100)
+//    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height/2)
+    }
+    
+    func setupHeaderViews(header: UICollectionReusableView){
+        //adding subviews
         header.backgroundColor = UIColor(red: 242.0/255.0, green: 242.0/255.0, blue: 242.0/255.0, alpha: 1.0)
         header.addSubview(self.navBar)
         header.addSubview(self.titleLabelView)
         header.addSubview(self.headerPicture)
         header.addSubview(self.logoPicture)
         
-        //constraints
+        //header constraints setup (vertical)
         self.navBar.topAnchor.constraint(equalTo: header.topAnchor).isActive = true
         self.titleLabelView.bottomAnchor.constraint(equalTo: header.bottomAnchor).isActive = true
         self.headerPicture.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
         //self.headerPicture.bottomAnchor.constraint(equalTo: navBar.topAnchor).isActive = true
         self.headerPicture.widthAnchor.constraint(equalToConstant: navBar.frame.size.width)
         
+        //FIXME
+        header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0][v1][v2]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.navBar, "v1": self.headerPicture, "v2": self.titleLabelView]))
+        
         //let pictureHeight = collectionView.frame.size.height - navBar.frame.size.height - titleLabel.frame.size.height
         //self.headerPicture.heightAnchor.constraint(equalToConstant: 100)
         //self.headerPicture.sizeToFit()
         
-        //FIXME
-        header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0][v1][v2]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.navBar, "v1": self.headerPicture, "v2": self.titleLabelView]))
         //header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.titleLabel]))
         
-        //titlelabel view
+        //constraint setup for titlelabelView
         titleLabelView.addSubview(titleLabel)
         let widthConstraintMapLabel = titleLabelView.widthAnchor.constraint(equalToConstant: collectionView.frame.size.width)
         let heightConstraintMapLabel = titleLabelView.heightAnchor.constraint(equalToConstant: 60)
+        
         header.addConstraints([widthConstraintMapLabel,heightConstraintMapLabel])
         header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[v0]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": titleLabelView]))
         
+        //constraint setup for titleLabel
         titleLabelView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.titleLabel]))
         titleLabelView.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.titleLabel]))
         
+        //constraint setup for logo picture
         //FIXME: icon dimensions
         logoPicture.widthAnchor.constraint(equalToConstant: 100).isActive = true
         logoPicture.heightAnchor.constraint(equalToConstant: 100).isActive = true
@@ -207,12 +235,30 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         //FIXME
         //let logoOffset = collectionView.frame.size.width * 1/4
         //logoPicture.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor, constant: logoOffset)
-        
-        return header
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height/2)
+    //button actions
+    @objc func callAction(){
+        print("click")
+        guard let url = URL(string: "telprompt://" + (Client.shared.item?.telefone)!) else{
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    @objc func servicesAction(){
+        let servicesVC = ServicesViewController()
+        present(servicesVC, animated: true, completion: nil)
+    }
+    
+    @objc func locationAction(){
+        let alert = UIAlertController(title: "Endereço", message: Client.shared.item?.endereco ?? "Rua dos Mockados, 41", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Descartar", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    @objc func commentsAction(){
+        self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .bottom, animated: true)
     }
 }
 
@@ -222,7 +268,7 @@ class BottomCell: UICollectionViewCell {
         super.init(frame: frame)
         viewFrame = frame
         self.backgroundColor = .white
-        self.contentView.isUserInteractionEnabled = false
+        //self.contentView.isUserInteractionEnabled = false
         setupViews()
     }
     
@@ -434,8 +480,8 @@ class BottomCell: UICollectionViewCell {
         
         //constraint setup for location icon on map label
         //FIXME: icon dimensions
-        mapLabelLocationIcon.widthAnchor.constraint(equalToConstant: 50)
-        mapLabelLocationIcon.heightAnchor.constraint(equalToConstant: 50)
+        mapLabelLocationIcon.widthAnchor.constraint(equalToConstant: 50).isActive = true
+        mapLabelLocationIcon.heightAnchor.constraint(equalToConstant: 50).isActive = true
         mapLabelLocationIcon.layer.cornerRadius = 25
         
         mapLabelLocationIcon.centerYAnchor.constraint(equalTo: mapLabelView.topAnchor).isActive = true
@@ -452,13 +498,43 @@ class BottomCell: UICollectionViewCell {
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]-[v4][v5]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": locationButton, "v1": locationLabel, "v2": textDescription, "v3": line1px, "v4": mapView, "v5": mapLabelView]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]-[v4][v5]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": commentsButton, "v1": commentsLabel, "v2": textDescription, "v3": line1px, "v4": mapView, "v5": mapLabelView]))
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v3]-[v2]-[v4][v5]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": favoritesButton, "v1": favoritesLabel, "v2": textDescription, "v3": line1px, "v4": mapView, "v5": mapLabelView]))
+        
+        //button`s actions
+        callButton.addTarget(self, action: #selector(callAction), for: .touchUpInside)
+        servicesButton.addTarget(self, action: #selector(servicesAction), for: .touchUpInside)
+        locationButton.addTarget(self, action: #selector(locationAction), for: .touchUpInside)
+        commentsButton.addTarget(self, action: #selector(commentsAction), for: .touchUpInside)
+        
+//        if let lastSubview = self.subviews.last {
+//            self.heightAnchor.constraint(equalToConstant: lastSubview.coordinateSpace.bounds.maxY).isActive = true
+//        }
+        
+    }
+    
+    @objc func callAction(sender: UIButton!){
+        NotificationCenter.default.post(name: Notification.Name("call"), object: nil)
+    }
+    
+    @objc func servicesAction(){
+        NotificationCenter.default.post(name: Notification.Name("services"), object: nil)
+    }
+    
+    
+    @objc func locationAction(){
+        NotificationCenter.default.post(name: Notification.Name("location"), object: nil)
+    }
+    
+    @objc func commentsAction(){
+        NotificationCenter.default.post(name: Notification.Name("comments"), object: nil)
     }
 }
 
-class TopCell: UICollectionViewCell {
+class CommentCell: UICollectionViewCell {
+    
     override init(frame: CGRect){
         super.init(frame: frame)
         self.contentView.isUserInteractionEnabled = false
+        self.backgroundColor = .blue
         setupViews()
     }
     
@@ -466,34 +542,120 @@ class TopCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    let pictureImageView : UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .orange
-        return imageView
+    let userCommentPictureView : UIImageView = {
+        let view = UIImageView()
+        DispatchQueue.main.async{
+            //FIXME
+            let data = try? Data(contentsOf: URL(string: (Client.shared.item?.urlLogo)!)!)
+            view.image = UIImage(data: data!)
+        }
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        return view
     }()
     
     let titleLabel : UILabel = {
         let label = UILabel()
         label.text = Client.shared.item?.titulo ?? "Mock Title"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: 24)
+        label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
 //        label.backgroundColor = .blue
         return label
     }()
     
-    func setupViews(){
-        
-        addSubview(pictureImageView)
-        addSubview(titleLabel)
+    let nameLabel : UILabel = {
+        let label = UILabel()
+        label.text = Client.shared.item?.titulo ?? "Mock Title"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        //        label.backgroundColor = .blue
+        return label
+    }()
     
-        //TODO: constraint setup for imageview (view only, no image yet) --> Add image + constraints to fill
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": pictureImageView]))
+    let commentLabel : UILabel = {
+        let label = UILabel()
+        label.text = Client.shared.item?.titulo ?? "Mock Title"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        //        label.backgroundColor = .blue
+        return label
+    }()
+    
+    let noteLabel : UILabel = {
+        let label = UILabel()
+        label.text = "Nota: "
+        label.text?.append(contentsOf: "5")
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        //        label.backgroundColor = .blue
+        return label
+    }()
+    
+    let noteImageView : UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(named: "favorite_button")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .white
+        return view
+    }()
+    
+    func getIndexPathInt() -> Int? {
+        guard let superView = self.superview as? UICollectionView else {
+            print("superview is not a UICollectionView - getIndexPath")
+            return nil
+        }
         
-        //constraint setup for label
-        let labelBottomConstraint = titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
-        addConstraint(labelBottomConstraint)
-        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": titleLabel]))
+        guard let index = superView.indexPath(for: self)?.item else{
+            print("error while getting index")
+            return nil
+        }
+        
+        return index
+    }
+    
+    func setupViews(){
+        let indexPathInt = getIndexPathInt() ?? 0
+        //if err -> displays first image always
+        let index = indexPathInt == 0 ? 0 : indexPathInt - 1
+        let padding = 16
+        
+        addSubview(userCommentPictureView)
+        addSubview(titleLabel)
+        addSubview(nameLabel)
+        addSubview(commentLabel)
+        addSubview(noteLabel)
+        
+        //constraint setup for user picture view
+        userCommentPictureView.widthAnchor.constraint(equalToConstant: 80).isActive = true
+        userCommentPictureView.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        userCommentPictureView.layer.cornerRadius = 40
+
+        //userCommentPictureView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
+        userCommentPictureView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
+
+        //constraint setup for name label
+
+        //constraint setup for cell (horizontal)
+        let noteLabelSpacing = 8/*self.frame.size.width - userCommentPictureView.frame.size.width - nameLabel.frame.size.width - nameLabel.frame.size.width - 32*/
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-[v1]-\(noteLabelSpacing)-[v2]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": userCommentPictureView, "v1": nameLabel, "v2": noteLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-[v1]-\(noteLabelSpacing)-[v2]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": userCommentPictureView, "v1": titleLabel, "v2": noteLabel]))
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-[v1]-\(noteLabelSpacing)-[v2]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": userCommentPictureView, "v1": commentLabel, "v2": noteLabel]))
+
+        //constraint setup for note
+        //noteImageView.widthAnchor.constraint(equalToConstant: 10).isActive = true
+        //noteImageView.heightAnchor.constraint(equalToConstant: 10).isActive = true
+        
+        noteLabel.centerYAnchor.constraint(equalTo: nameLabel.bottomAnchor).isActive = true
+
+//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[v0][v1][v2][v3][v4]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": star1, "v1": star2, "v2": star3, "v3": star4, "v4": star5]))
+
+
+        //constraint setup for cell (vertical)
+        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": titleLabel, "v2": commentLabel]))
+        
     }
 }
