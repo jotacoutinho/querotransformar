@@ -25,7 +25,7 @@ class ListViewController: UITableViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Tela Inicial"
         
-        //ws to get list content (with an idle loading view)
+        //ws to get list content
         getListContent()
         showLoadingView()
     

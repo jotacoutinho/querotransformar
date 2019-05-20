@@ -24,7 +24,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 24)
         label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
-        //        label.backgroundColor = .blue
         return label
     }()
     
@@ -36,14 +35,12 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     
     let headerPicture : UIImageView = {
         let view = UIImageView()
-        //FIXME
         DispatchQueue.main.async{
+            //FIXME
             let data = try? Data(contentsOf: URL(string: (Client.shared.item?.urlFoto)!)!)
             print(Client.shared.item?.urlFoto)
             view.image = UIImage(data: data!)
-            //view.image = UIImage(named: "favorites_button")
         }
-        //view.image = UIImage(named: "favorites_button")
         view.translatesAutoresizingMaskIntoConstraints = false
         //view.sizeToFit()
         view.backgroundColor = .blue
@@ -144,7 +141,6 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print(Client.shared.item?.comentarios.count)
         return (Client.shared.item?.comentarios.count ?? 0) + 1
         //return 2
     }
@@ -153,12 +149,22 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
 //        return 2
 //    }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {   
-        
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         //FIXME: dynamic heights
         if(indexPath.item == 0){
             //main cell
-            return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+            switch(Client.shared.item?.id){
+            case "1":
+                return CGSize(width: collectionView.frame.width, height: 410.0)
+            case "b":
+                return CGSize(width: collectionView.frame.width, height: 368.0)
+            case "c33":
+                return CGSize(width: collectionView.frame.width, height: 392.0)
+            case "ultimo":
+                return CGSize(width: collectionView.frame.width, height: 410.0)
+            default:
+                return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
+            }
         } else{
             //comments
             return CGSize(width: collectionView.frame.width, height: collectionView.frame.height/3)
@@ -166,12 +172,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
-        //if(kind == UICollectionView.elementKindSectionHeader){
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerId, for: indexPath)
             setupHeaderViews(header: header)
             return header
-        //}
     }
     
     
@@ -195,17 +198,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         self.navBar.topAnchor.constraint(equalTo: header.topAnchor).isActive = true
         self.titleLabelView.bottomAnchor.constraint(equalTo: header.bottomAnchor).isActive = true
         self.headerPicture.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
-        //self.headerPicture.bottomAnchor.constraint(equalTo: navBar.topAnchor).isActive = true
         self.headerPicture.widthAnchor.constraint(equalToConstant: navBar.frame.size.width)
         
-        //FIXME
         header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0][v1][v2]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.navBar, "v1": self.headerPicture, "v2": self.titleLabelView]))
-        
-        //let pictureHeight = collectionView.frame.size.height - navBar.frame.size.height - titleLabel.frame.size.height
-        //self.headerPicture.heightAnchor.constraint(equalToConstant: 100)
-        //self.headerPicture.sizeToFit()
-        
-        //header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.titleLabel]))
         
         //constraint setup for titlelabelView
         titleLabelView.addSubview(titleLabel)
@@ -226,15 +221,9 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         logoPicture.layer.cornerRadius = 50
         
         logoPicture.centerYAnchor.constraint(equalTo: self.titleLabelView.topAnchor).isActive = true
-        //logoPicture.rightAnchor.constraint(equalTo: (self.navigationItem.rightBarButtonItem?.customView?.leftAnchor)!).isActive = true
+
         let leftPaddingConstraintForLogo = collectionView.frame.size.width - 100.0 - CGFloat(padding)
         header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(leftPaddingConstraintForLogo)-[v0]-\(padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.logoPicture]))
-        
-        //header.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[v0]-\(3*padding)-|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": self.logoPicture]))
-        
-        //FIXME
-        //let logoOffset = collectionView.frame.size.width * 1/4
-        //logoPicture.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor, constant: logoOffset)
     }
     
     //button actions
@@ -258,7 +247,10 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
     }
     
     @objc func commentsAction(){
-        self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .bottom, animated: true)
+        //default: header + main (2)
+        if(self.collectionView.numberOfItems(inSection: 0) >= 2){
+            self.collectionView.scrollToItem(at: IndexPath(item: 1, section: 0), at: .top, animated: true)
+        }
     }
 }
 
@@ -268,7 +260,6 @@ class BottomCell: UICollectionViewCell {
         super.init(frame: frame)
         viewFrame = frame
         self.backgroundColor = .white
-        //self.contentView.isUserInteractionEnabled = false
         setupViews()
     }
     
@@ -280,7 +271,6 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "call_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.backgroundColor = .red
         return button
     }()
     
@@ -288,7 +278,6 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "services_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.backgroundColor = .blue
         return button
     }()
     
@@ -296,7 +285,6 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "location_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.backgroundColor = .red
         return button
     }()
     
@@ -304,7 +292,6 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "comments_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.backgroundColor = .blue
         return button
     }()
     
@@ -312,7 +299,6 @@ class BottomCell: UICollectionViewCell {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "favorites_button"), for: UIControl.State.normal)
         button.translatesAutoresizingMaskIntoConstraints = false
-//        button.backgroundColor = .red
         return button
     }()
     
@@ -476,7 +462,6 @@ class BottomCell: UICollectionViewCell {
         //constraint setup for map label
         mapLabel.centerYAnchor.constraint(equalTo: mapLabelView.centerYAnchor).isActive = true
         mapLabel.rightAnchor.constraint(equalTo: commentsLabel.rightAnchor).isActive = true
-//        mapLabel.rightAnchor.constraint(equalTo: mapLabelLocationIcon.leftAnchor, constant: CGFloat(padding/2)).isActive = true
         
         //constraint setup for location icon on map label
         //FIXME: icon dimensions
@@ -486,7 +471,6 @@ class BottomCell: UICollectionViewCell {
         
         mapLabelLocationIcon.centerYAnchor.constraint(equalTo: mapLabelView.topAnchor).isActive = true
         mapLabelLocationIcon.leftAnchor.constraint(equalTo: favoritesLabel.leftAnchor).isActive = true
-//        mapLabelLocationIcon.rightAnchor.constraint(equalTo: self.rightAnchor, constant: CGFloat(padding/2)).isActive = true
     
         //other views
         //addConstraints
@@ -504,11 +488,6 @@ class BottomCell: UICollectionViewCell {
         servicesButton.addTarget(self, action: #selector(servicesAction), for: .touchUpInside)
         locationButton.addTarget(self, action: #selector(locationAction), for: .touchUpInside)
         commentsButton.addTarget(self, action: #selector(commentsAction), for: .touchUpInside)
-        
-//        if let lastSubview = self.subviews.last {
-//            self.heightAnchor.constraint(equalToConstant: lastSubview.coordinateSpace.bounds.maxY).isActive = true
-//        }
-        
     }
     
     @objc func callAction(sender: UIButton!){
@@ -544,11 +523,7 @@ class CommentCell: UICollectionViewCell {
     
     let userCommentPictureView : UIImageView = {
         let view = UIImageView()
-        DispatchQueue.main.async{
-            //FIXME
-            let data = try? Data(contentsOf: URL(string: (Client.shared.item?.urlLogo)!)!)
-            view.image = UIImage(data: data!)
-        }
+        view.image = UIImage(named: "favorite_button")
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .white
         return view
@@ -560,7 +535,6 @@ class CommentCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
-//        label.backgroundColor = .blue
         return label
     }()
     
@@ -570,7 +544,6 @@ class CommentCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 16)
         label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
-        //        label.backgroundColor = .blue
         return label
     }()
     
@@ -580,7 +553,6 @@ class CommentCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
-        //        label.backgroundColor = .blue
         return label
     }()
     
@@ -591,7 +563,6 @@ class CommentCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
-        //        label.backgroundColor = .blue
         return label
     }()
     
@@ -618,9 +589,6 @@ class CommentCell: UICollectionViewCell {
     }
     
     func setupViews(){
-        let indexPathInt = getIndexPathInt() ?? 0
-        //if err -> displays first image always
-        let index = indexPathInt == 0 ? 0 : indexPathInt - 1
         let padding = 16
         
         addSubview(userCommentPictureView)
@@ -646,16 +614,9 @@ class CommentCell: UICollectionViewCell {
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(padding)-[v0]-[v1]-\(noteLabelSpacing)-[v2]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": userCommentPictureView, "v1": commentLabel, "v2": noteLabel]))
 
         //constraint setup for note
-        //noteImageView.widthAnchor.constraint(equalToConstant: 10).isActive = true
-        //noteImageView.heightAnchor.constraint(equalToConstant: 10).isActive = true
-        
         noteLabel.centerYAnchor.constraint(equalTo: nameLabel.bottomAnchor).isActive = true
-
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:[v0][v1][v2][v3][v4]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": star1, "v1": star2, "v2": star3, "v3": star4, "v4": star5]))
-
 
         //constraint setup for cell (vertical)
         addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[v0]-[v1]-[v2]", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0": nameLabel, "v1": titleLabel, "v2": commentLabel]))
-        
     }
 }

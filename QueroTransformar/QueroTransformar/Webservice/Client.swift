@@ -44,15 +44,11 @@ class Client{
                     return
                 }
                 
-                //parse info.attributes
-                //titulo = info.titulo
-                //
-                //...
-                
+                //saving info
                 let itemArray : Array<Any> = info.lista
-                print(itemArray)
                 self.itemList = itemArray
                 completionHandler(true)
+                
                 break
             case 400:
                 completionHandler(false)
@@ -66,7 +62,6 @@ class Client{
     }
     
     func getItem(id: String, completionHandler: @escaping (_ success : Bool) -> Void){
-        //FIXME: add id
         let urlString = "http://dev.4all.com:3003/tarefa/\(id)"
         print("requesting url: \(urlString)")
         let request : NSMutableURLRequest = NSMutableURLRequest()
@@ -88,21 +83,20 @@ class Client{
                         return
                     }
                     
-                    //print(info)
-                    
                     //parsing retrived data
                     var commentsArray = Array<EntityComment>()
                     info.comentarios.forEach{
                         comment in
-                        
+                        //filling array of comments
                         let currentComment = EntityComment(urlFoto: comment.urlFoto, nome: comment.nome, nota: comment.nota, titulo: comment.titulo, comentario: comment.comentario)
                         
                         commentsArray.append(currentComment)
                     }
                     
+                    //saving info
                     self.item = EntityItem(id: info.id, cidade: info.cidade, bairro: info.bairro, urlFoto: info.urlFoto, urlLogo: info.urlLogo, titulo: info.titulo, telefone: info.telefone, texto: info.texto, endereco: info.endereco, latitude: info.latitude, longitude: info.longitude, comentarios: commentsArray)
-                    
                     completionHandler(true)
+                    
                     break
                 case 400:
                     //bad request
@@ -118,9 +112,7 @@ class Client{
     fileprivate func dataTask(with request: URLRequest, completionHandler: @escaping(_ status: Int?, _ data: Data?) -> Void) -> URLSessionDataTask {
         return session.dataTask(with: request) {
             (data, response, error)  in
-//            print(data)
-//            print(response)
-//            print(error)
+            
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, let data = data else {
                 completionHandler(nil, nil)
                 return

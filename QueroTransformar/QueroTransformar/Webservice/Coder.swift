@@ -15,13 +15,10 @@ class Coder {
         
         do {
             let decodedData = try JSONDecoder().decode(type, from: data)
-            //print("Successfully decoded data of type \(type).")
             return decodedData
         }
         catch {
             print("Error while getting data of \(type).\n\(error.localizedDescription)")
-            // Uncomment the following print to see more details:
-            //print("Error -> \(error)")
         }
         
         return nil
