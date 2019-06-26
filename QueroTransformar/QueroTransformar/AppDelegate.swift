@@ -16,14 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-        
-        let controller = ListViewController()
-        let navigationController = UINavigationController(rootViewController: controller)
-        window?.rootViewController = navigationController
-        
-        // Override point for customization after application launch.
+//        let storyboard = UIStoryboard(name: "ListView", bundle: nil)
+//        let initialViewController = storyboard.instantiateViewController(withIdentifier: "NewListViewController")
+//        self.window?.rootViewController = initialViewController
+//        //self.window?.makeKeyAndVisible()
         return true
     }
 
