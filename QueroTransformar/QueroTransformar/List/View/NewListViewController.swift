@@ -24,6 +24,7 @@ class NewListViewController: UIViewController {
             tableView.backgroundColor = UIColor.clear
             tableView.delegate = self
             tableView.dataSource = self
+            tableView.separatorStyle = .none
             tableView.register(UINib(nibName: "ListViewCell", bundle: nil), forCellReuseIdentifier: "cellId")
         }
     }
