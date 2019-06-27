@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="300" id="CbL-Gj-uPg">
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="300" id="CbL-Gj-uPg" customClass="MainViewHeader" customModule="QueroTransformar" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="300" height="200"/>
             <autoresizingMask key="autoresizingMask"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="CbL-Gj-uPg" id="YBS-kX-EyM">
@@ -48,6 +48,11 @@
                     <constraint firstAttribute="trailing" secondItem="gy8-Bk-Iqx" secondAttribute="trailing" id="bVr-Nr-nvY"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="headerLogoImageView" destination="lBG-0D-XDZ" id="U5f-oU-GMG"/>
+                <outlet property="headerPictureImageView" destination="gec-D3-9T6" id="GwC-yB-OwX"/>
+                <outlet property="headerTitleLabel" destination="gy8-Bk-Iqx" id="LO9-Gp-hcY"/>
+            </connections>
             <point key="canvasLocation" x="93.599999999999994" y="-1.7991004497751126"/>
         </tableViewCell>
     </objects>
