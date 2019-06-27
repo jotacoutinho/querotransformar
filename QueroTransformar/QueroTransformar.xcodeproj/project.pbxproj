@@ -96,6 +96,7 @@
 				5C57E08322C4FB43006E81E1 /* List */,
 				5C57E09022C4FC8A006E81E1 /* Resources */,
 				573E08432278AC24006EE5F8 /* AppDelegate.swift */,
+				573E084F2278AC26006EE5F8 /* Info.plist */,
 				573E084C2278AC26006EE5F8 /* LaunchScreen.storyboard */,
 			);
 			path = QueroTransformar;
@@ -249,7 +250,6 @@
 			isa = PBXGroup;
 			children = (
 				573E084A2278AC26006EE5F8 /* Assets.xcassets */,
-				573E084F2278AC26006EE5F8 /* Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";

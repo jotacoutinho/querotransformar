@@ -30,26 +30,13 @@ class NewListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        //title setup
-//        let navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 75))
-//        let navItem = UINavigationItem()
-//
-//        navItem.title = "Tela Inicial"
-//        navBar.items = [navItem]
-//        navBar.backgroundColor = UIColor.clear
-//        navBar.prefersLargeTitles = true
-//
-//        self.view.addSubview(navBar)
-        
-        
+    
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Tela Inicial"
-        
-        
+           
         //ws to get list content
-        getListContent()
-        showLoadingView()
+        //getListContent()
+        //showLoadingView()
     }
     
     func getListContent(){
@@ -108,81 +95,19 @@ class NewListViewController: UIViewController {
 
 extension NewListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return listSize
-        return 40
+        return 4
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let servicesViewController = ServicesViewController()
         
-        //get content info
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ListViewCell
-        
-        //FIXME: when error occurs, will donwload first known item
-        showLoadingView()
-        Client.shared.getItem(id: Client.shared.itemList[indexPath.item] as! String){
-            success in
-            
-            if(!success){
-                //couldn`t donwload list
-                let alert = UIAlertController(title: "Oops!", message: "Algo deu errado ao tentar realizar o download do item :(", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Descartar", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            } else{
-                //download ok
-                //collection view layout setup
-                let flowLayout = UICollectionViewFlowLayout()
-                let mainViewController = MainViewController(collectionViewLayout: flowLayout)
-                
-                tableView.deselectRow(at: indexPath, animated: true)
-                
-                //presenting on main thread
-                DispatchQueue.main.async {
-                    self.present(mainViewController, animated: true)
-                }
-            }
-            
-            //ui update on main thread
-            DispatchQueue.main.async {
-                self.loadingView.isHidden = true
-                self.container.isHidden = true
-                self.loadingController.stopAnimating()
-                self.tableView.reloadData()
-            }
-        }
+        let viewController:UIViewController = UIStoryboard(name: "MainView", bundle: nil).instantiateViewController(withIdentifier: "NewMainViewController") as UIViewController
+        self.navigationController?.pushViewController(viewController, animated: true)
+                    
     }
-    
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ListViewCell
-        //cell.setText(text: Client.shared.itemList[indexPath.item] as! String)
         return cell
     }
     
 }
-
-
-//class ListCell: UITableViewCell {
-//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-//        super.init(style: style, reuseIdentifier: reuseIdentifier)
-//        setupViews()
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    let nameLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "Mock Item"
-//        label.font = UIFont.systemFont(ofSize: 18)
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
-//
-//    //adds subviews + constraints setup
-//    func setupViews(){
-//        addSubview(nameLabel)
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0":nameLabel]))
-//        addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[v0]|", options: NSLayoutConstraint.FormatOptions(), metrics: nil, views: ["v0":nameLabel]))
-//    }
-//}

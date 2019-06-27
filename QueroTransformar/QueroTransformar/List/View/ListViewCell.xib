@@ -20,17 +20,16 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BdK-oG-Q4M">
-                        <rect key="frame" x="20" y="0.0" width="335" height="43.5"/>
+                        <rect key="frame" x="24" y="11.5" width="327" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailing" secondItem="BdK-oG-Q4M" secondAttribute="trailing" constant="20" symbolic="YES" id="9jk-Wv-x3L"/>
-                    <constraint firstItem="BdK-oG-Q4M" firstAttribute="leading" secondItem="hbx-Jl-OoL" secondAttribute="leading" constant="20" symbolic="YES" id="C9M-y6-FRP"/>
-                    <constraint firstItem="BdK-oG-Q4M" firstAttribute="top" secondItem="hbx-Jl-OoL" secondAttribute="top" id="l6E-IJ-5kl"/>
-                    <constraint firstAttribute="bottom" secondItem="BdK-oG-Q4M" secondAttribute="bottom" id="ozn-0E-Ais"/>
+                    <constraint firstItem="BdK-oG-Q4M" firstAttribute="leading" secondItem="hbx-Jl-OoL" secondAttribute="leadingMargin" constant="8" id="DUo-52-NIc"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="BdK-oG-Q4M" secondAttribute="trailing" constant="8" id="f9w-dp-dRr"/>
+                    <constraint firstItem="BdK-oG-Q4M" firstAttribute="centerY" secondItem="hbx-Jl-OoL" secondAttribute="centerY" id="oAx-iU-Oky"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="6L3-DB-shw"/>

@@ -61,8 +61,9 @@ class MainViewCenter: UITableViewCell {
 //        }
 //    }
     
-    @IBOutlet weak var descriptionTextView : UITextView! {
+    @IBOutlet weak var descriptionLabel : UILabel! {
         didSet{
+            descriptionLabel.backgroundColor = UIColor.clear
         }
     }
     
