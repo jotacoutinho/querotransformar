@@ -15,6 +15,8 @@ class NewMainViewController: UIViewController {
     let loadingView = UIView()
     let container = UIView()
     
+    var navBar = UINavigationBar()
+    
     let viewModel = MainViewModel()
     var id = String()
     
@@ -34,11 +36,64 @@ class NewMainViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.prefersLargeTitles = false
-        self.title = "Tela Principal"
+        //self.title = "Tela Principal"
+//        self.navigationController?.navigationBar.backItem?.backBarButtonItem?.style = .plain
+//        self.navigationController?.navigationBar.backItem?.backBarButtonItem?.title = "oi"
+        self.navigationItem.backBarButtonItem?.title = "Mudou"
+        self.navigationController?.navigationBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        self.navigationController?.navigationBar.tintColor = .white
         
         viewModel.delegate = self
-        
         loadItem(id: id)
+    }
+    
+    func configureNavBar(){
+        //navigation items
+        let navItem = UINavigationItem()
+        navItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button"), style: .plain, target: self, action: #selector(self.pressedBackButton))
+        navItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "search_button"), style: .plain, target: self, action: nil)
+        
+        //title setup (image + text)
+        let titleView = UIView()
+        let titleLabel = UILabel()
+        titleLabel.text = Client.shared.item?.cidade ?? "City"
+        titleLabel.text?.append(" - ")
+        titleLabel.text?.append(Client.shared.item?.bairro ?? "Neigborhood")
+        titleLabel.font = UIFont.systemFont(ofSize: 14)
+        titleLabel.textColor = .white
+        titleLabel.sizeToFit()
+        titleLabel.center = titleView.center
+        titleLabel.textAlignment = NSTextAlignment.center
+        
+        //image's aspect ratio
+        let locationTitleImage = UIImageView(image: UIImage(named: "location_white"))
+        let imageAspect = locationTitleImage.image!.size.width / locationTitleImage.image!.size.height
+        
+        //image frame immediately before the text
+        let imageX = titleLabel.frame.origin.x - titleLabel.frame.size.height * imageAspect
+        let imageY = titleLabel.frame.origin.y
+        let imageWidth = titleLabel.frame.size.height * imageAspect
+        let imageHeight = titleLabel.frame.size.height
+        
+        locationTitleImage.frame = CGRect(x: imageX, y: imageY, width: imageWidth, height: imageHeight)
+        locationTitleImage.contentMode = UIView.ContentMode.scaleAspectFit
+        
+        //adding views
+        titleView.addSubview(locationTitleImage)
+        titleView.addSubview(titleLabel)
+        titleView.sizeToFit()
+        navItem.titleView = titleView
+        
+        //nav bar configuration
+//        let height = UINavigationController().navigationBar.frame.size.height
+//        self.navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: height))
+//        self.navBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+//        self.navBar.tintColor = .white
+//        self.navBar.items = [navItem]
+        
+        self.navigationController?.navigationBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        self.navigationController?.navigationBar.tintColor = .white
+        self.navigationController?.navigationBar.items = [navItem]
     }
     
     func loadItem(id: String){
@@ -80,6 +135,10 @@ class NewMainViewController: UIViewController {
         self.loadingView.isHidden = true
         self.container.isHidden = true
         self.loadingController.stopAnimating()
+    }
+    
+    @objc func pressedBackButton(){
+        self.dismiss(animated: true)
     }
     
 }

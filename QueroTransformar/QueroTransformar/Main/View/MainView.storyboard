@@ -32,7 +32,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="F5s-FI-oYC"/>
                     </view>
-                    <navigationItem key="navigationItem" id="j50-oQ-3ya"/>
+                    <navigationItem key="navigationItem" id="j50-oQ-3ya">
+                        <barButtonItem key="rightBarButtonItem" image="search_button" style="plain" id="Apt-3n-U4b"/>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="r7m-4b-LyN" id="OX6-0G-76N"/>
                     </connections>
@@ -42,4 +44,7 @@
             <point key="canvasLocation" x="596" y="-131.78410794602701"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="search_button" width="11.520000457763672" height="10.800000190734863"/>
+    </resources>
 </document>

@@ -40,6 +40,7 @@
 		5CC4821B22C40E8E00751624 /* MainViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CC4821A22C40E8E00751624 /* MainViewHeader.xib */; };
 		5CC4821D22C4164B00751624 /* MainViewCenter.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CC4821C22C4164B00751624 /* MainViewCenter.xib */; };
 		5CFCEAC422C684E100031ED8 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFCEAC322C684E100031ED8 /* MainViewModel.swift */; };
+		5CFCEAC622C6AB2D00031ED8 /* MainViewNavigationBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5CFCEAC522C6AB2D00031ED8 /* MainViewNavigationBar.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		5CC4821A22C40E8E00751624 /* MainViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewHeader.xib; sourceTree = "<group>"; };
 		5CC4821C22C4164B00751624 /* MainViewCenter.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewCenter.xib; sourceTree = "<group>"; };
 		5CFCEAC322C684E100031ED8 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		5CFCEAC522C6AB2D00031ED8 /* MainViewNavigationBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainViewNavigationBar.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -214,6 +216,7 @@
 				5C57E07722C4EFEA006E81E1 /* MainViewComment.xib */,
 				5C57E07F22C4F973006E81E1 /* NewMainViewController.swift */,
 				5C57E08122C4FB2F006E81E1 /* MainView.storyboard */,
+				5CFCEAC522C6AB2D00031ED8 /* MainViewNavigationBar.xib */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -384,6 +387,7 @@
 				5C57E07822C4EFEA006E81E1 /* MainViewComment.xib in Resources */,
 				5C41744922C3A540001E227F /* ListView.storyboard in Resources */,
 				573E084B2278AC26006EE5F8 /* Assets.xcassets in Resources */,
+				5CFCEAC622C6AB2D00031ED8 /* MainViewNavigationBar.xib in Resources */,
 				5CC4821B22C40E8E00751624 /* MainViewHeader.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
