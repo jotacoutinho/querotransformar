@@ -17,8 +17,8 @@ struct Config{
     }
     
     static var defaultHeaders: [String: String] {
-        return ["application/json" : "Content-Type",
-                "application/json" : "Accept"]
+        return ["Content-Type" : "application/json",
+                "Accept" :  "application/json"]
     }
     
 }

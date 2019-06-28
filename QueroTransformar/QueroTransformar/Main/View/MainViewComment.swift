@@ -47,4 +47,9 @@ class MainViewComment: UITableViewCell {
         self.backgroundColor = UIColor.clear
     }
     
+    func configure(for item: Item){
+        self.userNameLabel.text = item.comentarios.first?.nome
+        self.titleLabel.text = item.comentarios.first?.titulo
+        self.commentLabel.text = item.comentarios.first?.comentario
+    }
 }

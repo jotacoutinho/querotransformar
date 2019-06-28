@@ -8,15 +8,17 @@
 
 import Foundation
 
-struct ListService{
+struct ListService {
     
-    static func requestList(completion: @escaping (Bool, List?) -> Void) {
+    func requestList(completion: @escaping (Bool, List?) -> Void) {
         APIService.request(urlPath: "", method: .get, parameters: nil) { (data, error) in
             guard let data = data else {
                 //request error
                 completion(false, nil)
                 return
             }
+            
+            print(String(bytes: data, encoding: .utf8))
             
             let decoder = JSONDecoder()
             do {

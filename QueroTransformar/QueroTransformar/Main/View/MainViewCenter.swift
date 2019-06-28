@@ -36,30 +36,6 @@ class MainViewCenter: UITableViewCell {
         }
     }
     
-//    @IBOutlet weak var callLabel : UILabel! {
-//        didSet{
-//        }
-//    }
-//
-//    @IBOutlet weak var servicesLabel : UILabel! {
-//        didSet{
-//        }
-//    }
-//
-//    @IBOutlet weak var locationLabel : UILabel! {
-//        didSet{
-//        }
-//    }
-//
-//    @IBOutlet weak var commentsLabel : UILabel! {
-//        didSet{
-//        }
-//    }
-//
-//    @IBOutlet weak var favoritesLabel : UILabel! {
-//        didSet{
-//        }
-//    }
     
     @IBOutlet weak var descriptionLabel : UILabel! {
         didSet{
@@ -82,6 +58,15 @@ class MainViewCenter: UITableViewCell {
         self.backgroundColor = UIColor.clear
     }
     
-
+    func configure(for item: Item){
+        self.descriptionLabel.text = item.texto
+        self.mapLabel.text = item.endereco
+        
+        //map setup
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = CLLocationCoordinate2D(latitude: CLLocationDegrees(exactly:item.latitude) ?? 0.0, longitude: CLLocationDegrees(exactly:item.longitude) ?? 0.0)
+        self.mapView.addAnnotation(annotation)
+        self.mapView.setRegion(MKCoordinateRegion(center: annotation.coordinate, span: MKCoordinateSpan(latitudeDelta: 0.005, longitudeDelta: 0.005)), animated: false)
+    }
     
 }

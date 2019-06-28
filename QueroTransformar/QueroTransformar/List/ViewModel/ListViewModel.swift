@@ -8,15 +8,29 @@
 
 import Foundation
 
-final class ListViewModel {
+protocol ListViewModelDelegate: AnyObject{
+    func didFinishLoadingItems(success: Bool)
+}
+
+class ListViewModel {
+    weak var delegate: ListViewModelDelegate?
     private var _items: List?
-    //private let listService = ListService()
+    private var listService = ListService()
     
     var items: List? {
         get { return _items }
     }
     
-    func loadListItems() {
+    func loadItems() {
         //returns downloaded items
+        listService.requestList(){
+            success, data in
+            
+            if(success){
+                self._items = data
+            }
+            
+            self.delegate?.didFinishLoadingItems(success: success)
+        }
     }
 }

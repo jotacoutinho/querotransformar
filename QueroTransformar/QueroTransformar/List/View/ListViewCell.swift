@@ -13,7 +13,6 @@ class ListViewCell: UITableViewCell {
     @IBOutlet weak var label : UILabel! {
         didSet{
             label.font = UIFont.systemFont(ofSize: 16)
-            //label.text = "Mock"
         }
     }
 

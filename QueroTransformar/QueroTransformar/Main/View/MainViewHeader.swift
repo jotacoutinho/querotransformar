@@ -17,7 +17,6 @@ class MainViewHeader: UITableViewCell {
     
     @IBOutlet weak var headerTitleLabel : UILabel! {
         didSet{
-            headerTitleLabel.text = "Título"
             headerTitleLabel.backgroundColor = UIColor.clear
         }
     }
@@ -35,6 +34,11 @@ class MainViewHeader: UITableViewCell {
     override func didMoveToWindow() {
         super.didMoveToWindow()
         self.bringSubviewToFront(headerLogoImageView)
+    }
+    
+    
+    func configure(for item: Item){
+        self.headerTitleLabel.text = item.titulo
     }
     
 }

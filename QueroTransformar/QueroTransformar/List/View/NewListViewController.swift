@@ -10,21 +10,18 @@ import Foundation
 import UIKit
 
 class NewListViewController: UIViewController {
-    var listSize : Int = 0
-    var listContent : Array<Any> = Array()
-    static let mainVC = MainViewController()
-    
     //spinning view
     let loadingController = UIActivityIndicatorView()
     let loadingView = UIView()
     let container = UIView()
+    
+    let viewModel = ListViewModel()
     
     @IBOutlet private weak var tableView: UITableView! {
         didSet {
             tableView.backgroundColor = UIColor.clear
             tableView.delegate = self
             tableView.dataSource = self
-            tableView.separatorStyle = .none
             tableView.register(UINib(nibName: "ListViewCell", bundle: nil), forCellReuseIdentifier: "cellId")
         }
     }
@@ -34,33 +31,14 @@ class NewListViewController: UIViewController {
     
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Tela Inicial"
-           
-        //ws to get list content
-        //getListContent()
-        //showLoadingView()
+        
+        viewModel.delegate = self
+        loadList()
     }
     
-    func getListContent(){
-        Client.shared.getList(){
-            success in
-            if(!success){
-                //couldn`t donwload list
-                let alert = UIAlertController(title: "Oops!", message: "Algo deu errado ao tentar realizar o download da lista :(", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Descartar", style: .default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            } else{
-                //download ok
-                self.listSize = Client.shared.itemList.count
-                //self.tableView.reloadData()
-            }
-            //ui update on main thread
-            DispatchQueue.main.async {
-                self.loadingView.isHidden = true
-                self.container.isHidden = true
-                self.loadingController.stopAnimating()
-                //self.tableView.reloadData()
-            }
-        }
+    func loadList(){
+        showLoadingView()
+        viewModel.loadItems()
     }
     
     //spinning view for loading
@@ -92,22 +70,43 @@ class NewListViewController: UIViewController {
         
         self.loadingController.startAnimating()
     }
+    
+    func stopLoadingView(){
+        self.loadingView.isHidden = true
+        self.container.isHidden = true
+        self.loadingController.stopAnimating()
+    }
+}
+
+extension NewListViewController: ListViewModelDelegate {
+    func didFinishLoadingItems(success: Bool) {
+        if(success){
+            //reload
+            tableView.reloadData()
+        } else{
+            //show error dialog
+        }
+        stopLoadingView()
+    }
 }
 
 extension NewListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return viewModel.items?.lista.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let viewController = UIStoryboard(name: "MainView", bundle: nil).instantiateViewController(withIdentifier: "NewMainViewController") as! NewMainViewController
+        //FIXME: handle empty list --> disable details
+        viewController.id = viewModel.items?.lista[indexPath.item] ?? ""
         
-        let viewController:UIViewController = UIStoryboard(name: "MainView", bundle: nil).instantiateViewController(withIdentifier: "NewMainViewController") as UIViewController
+        tableView.deselectRow(at: indexPath, animated: true)
         self.navigationController?.pushViewController(viewController, animated: true)
-                    
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ListViewCell
+        cell.setText(text: viewModel.items?.lista[indexPath.item] ?? "Dummy text")
         return cell
     }
     

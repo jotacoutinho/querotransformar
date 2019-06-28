@@ -10,7 +10,7 @@ import Foundation
 
 struct MainService{
     
-    static func requestContent(for id: String, completion: @escaping (Bool, Main?) -> Void) {
+    func requestContent(for id: String, completion: @escaping (Bool, Item?) -> Void) {
         APIService.request(urlPath: id, method: .get, parameters: nil) { (data, error) in
             guard let data = data else {
                 //request error
@@ -18,9 +18,11 @@ struct MainService{
                 return
             }
             
+            print(String(bytes: data, encoding: .utf8))
+            
             let decoder = JSONDecoder()
             do {
-                let info = try decoder.decode(Main.self, from: data)
+                let info = try decoder.decode(Item.self, from: data)
                 completion(true, info)
             } catch {
                 //decoding error

@@ -9,5 +9,5 @@
 import Foundation
 
 struct List: Codable {
-    var itemList: [String]
+    var lista: [String]
 }
