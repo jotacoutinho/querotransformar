@@ -7,18 +7,19 @@
 //
 
 import UIKit
+import Kingfisher
 
 class MainViewComment: UITableViewCell {
     
     @IBOutlet weak var userPictureImageView : UIImageView! {
         didSet{
-            //userPictureImageView.backgroundColor = UIColor.clear
+            userPictureImageView.backgroundColor = UIColor.clear
         }
     }
     
     @IBOutlet weak var noteImageView : UIImageView! {
         didSet{
-            //noteImageView.backgroundColor = UIColor.clear
+            noteImageView.backgroundColor = UIColor.clear
         }
     }
     
@@ -47,9 +48,29 @@ class MainViewComment: UITableViewCell {
         self.backgroundColor = UIColor.clear
     }
     
-    func configure(for item: Item){
-        self.userNameLabel.text = item.comentarios.first?.nome
-        self.titleLabel.text = item.comentarios.first?.titulo
-        self.commentLabel.text = item.comentarios.first?.comentario
+    func configure(for comment: Comments){
+        self.userNameLabel.text = comment.nome
+        self.titleLabel.text = comment.titulo
+        self.commentLabel.text = comment.comentario
+        self.userPictureImageView.kf.setImage(with: ImageResource(downloadURL: URL(string: comment.urlFoto)!))
+        switch(comment.nota){
+        case 1:
+            self.noteImageView.image = UIImage(named: "1star_nobg")
+            break
+        case 2:
+            self.noteImageView.image = UIImage(named: "2star_nobg")
+            break
+        case 3:
+            self.noteImageView.image = UIImage(named: "3star_nobg")
+            break
+        case 4:
+            self.noteImageView.image = UIImage(named: "4star_nobg")
+            break
+        case 5:
+            self.noteImageView.image = UIImage(named: "5star_nobg")
+            break
+        default:
+            self.noteImageView.image = UIImage(named: "5star_nobg")
+        }
     }
 }

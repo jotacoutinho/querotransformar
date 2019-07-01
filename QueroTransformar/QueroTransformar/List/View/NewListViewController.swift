@@ -26,15 +26,21 @@ class NewListViewController: UIViewController {
         }
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        self.navigationController?.navigationBar.barTintColor = UIColor.white
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.barStyle = UIBarStyle.black
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
     
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.title = "Tela Inicial"
+        
+        //"hiding" empty cells
+        tableView.tableFooterView = UIView(frame: .zero)
         
         viewModel.delegate = self
         loadList()
@@ -114,4 +120,7 @@ extension NewListViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 70
+    }
 }

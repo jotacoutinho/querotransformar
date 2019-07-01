@@ -19,6 +19,7 @@ class NewMainViewController: UIViewController {
     
     let viewModel = MainViewModel()
     var id = String()
+    var listSize = Int()
     
     @IBOutlet private weak var tableView: UITableView! {
         didSet {
@@ -26,6 +27,8 @@ class NewMainViewController: UIViewController {
             tableView.delegate = self
             tableView.dataSource = self
             tableView.separatorStyle = .none
+            tableView.rowHeight = UITableView.automaticDimension
+            tableView.estimatedRowHeight = 300
             tableView.register(UINib(nibName: "MainViewHeader", bundle: nil), forCellReuseIdentifier: "headerCellId")
             tableView.register(UINib(nibName: "MainViewCenter", bundle: nil), forCellReuseIdentifier: "centerCellId")
             tableView.register(UINib(nibName: "MainViewComment", bundle: nil), forCellReuseIdentifier: "commentCellId")
@@ -36,29 +39,22 @@ class NewMainViewController: UIViewController {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.prefersLargeTitles = false
-        //self.title = "Tela Principal"
-//        self.navigationController?.navigationBar.backItem?.backBarButtonItem?.style = .plain
-//        self.navigationController?.navigationBar.backItem?.backBarButtonItem?.title = "oi"
-        self.navigationItem.backBarButtonItem?.title = "Mudou"
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
         self.navigationController?.navigationBar.tintColor = .white
         
         viewModel.delegate = self
         loadItem(id: id)
+        
     }
     
     func configureNavBar(){
-        //navigation items
-        let navItem = UINavigationItem()
-        navItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "back_button"), style: .plain, target: self, action: #selector(self.pressedBackButton))
-        navItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "search_button"), style: .plain, target: self, action: nil)
         
         //title setup (image + text)
         let titleView = UIView()
         let titleLabel = UILabel()
-        titleLabel.text = Client.shared.item?.cidade ?? "City"
+        titleLabel.text = viewModel.item?.cidade ?? "City"
         titleLabel.text?.append(" - ")
-        titleLabel.text?.append(Client.shared.item?.bairro ?? "Neigborhood")
+        titleLabel.text?.append(viewModel.item?.bairro ?? "Neigborhood")
         titleLabel.font = UIFont.systemFont(ofSize: 14)
         titleLabel.textColor = .white
         titleLabel.sizeToFit()
@@ -82,18 +78,14 @@ class NewMainViewController: UIViewController {
         titleView.addSubview(locationTitleImage)
         titleView.addSubview(titleLabel)
         titleView.sizeToFit()
-        navItem.titleView = titleView
         
-        //nav bar configuration
-//        let height = UINavigationController().navigationBar.frame.size.height
-//        self.navBar = UINavigationBar(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: height))
-//        self.navBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
-//        self.navBar.tintColor = .white
-//        self.navBar.items = [navItem]
+        //constraints
+        //self.navigationController?.navigationItem.titleView?.centerXAnchor.constraint(equalTo: (self.navigationController?.navigationBar.centerXAnchor)!).isActive = true
+        //self.navigationController?.navigationItem.titleView?.centerYAnchor.constraint(equalTo: (self.navigationController?.navigationBar.centerYAnchor)!).isActive = true
         
-        self.navigationController?.navigationBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
-        self.navigationController?.navigationBar.tintColor = .white
-        self.navigationController?.navigationBar.items = [navItem]
+        //self.navigationController?.navigationBar.backItem?.backBarButtonItem?.image = UIImage(named: "back_button")
+        self.navigationItem.backBarButtonItem?.tintColor = UIColor.red
+        self.navigationController?.navigationItem.titleView?.addSubview(titleView)
     }
     
     func loadItem(id: String){
@@ -152,15 +144,26 @@ extension NewMainViewController: MainViewModelDelegate{
             //show error dialog
         }
         stopLoadingView()
+        configureNavBar()
     }
 }
 
 extension NewMainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return listSize
-        return 3
+        //setting up number of rows
+        if let comments = viewModel.item?.comentarios.count{
+            self.listSize = comments == 0 ? 2 : comments + 2
+        } else{
+            //header and center views
+            self.listSize = 2
+        }
+        
+        return self.listSize
     }
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell()
@@ -180,7 +183,7 @@ extension NewMainViewController: UITableViewDelegate, UITableViewDataSource {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: "commentCellId", for: indexPath) as? MainViewComment else{
                     return UITableViewCell()
                 }
-                cell.configure(for: item)
+                cell.configure(for: item.comentarios[indexPath.item - 2])
             }
         }
         return cell
