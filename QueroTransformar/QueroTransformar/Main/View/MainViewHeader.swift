@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class MainViewHeader: UITableViewCell {
     
@@ -39,6 +40,7 @@ class MainViewHeader: UITableViewCell {
     
     func configure(for item: Item){
         self.headerTitleLabel.text = item.titulo
+        self.headerPictureImageView.kf.setImage(with: ImageResource(downloadURL: URL(string: item.urlFoto)!))
     }
     
 }

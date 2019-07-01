@@ -18,7 +18,7 @@ struct ListService {
                 return
             }
             
-            print(String(bytes: data, encoding: .utf8))
+            //print(String(bytes: data, encoding: .utf8))
             
             let decoder = JSONDecoder()
             do {

@@ -163,7 +163,7 @@ extension NewMainViewController: UITableViewDelegate, UITableViewDataSource {
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = UITableViewCell()
+        let cell = UITableViewCell()
         
         if let item = viewModel.item{
             if(indexPath.item == 0){

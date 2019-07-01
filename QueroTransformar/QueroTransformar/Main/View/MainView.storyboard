@@ -33,7 +33,7 @@
                         <viewLayoutGuide key="safeArea" id="F5s-FI-oYC"/>
                     </view>
                     <navigationItem key="navigationItem" id="j50-oQ-3ya">
-                        <barButtonItem key="rightBarButtonItem" image="search_button" style="plain" id="Apt-3n-U4b"/>
+                        <barButtonItem key="rightBarButtonItem" image="search_button" id="Apt-3n-U4b"/>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="r7m-4b-LyN" id="OX6-0G-76N"/>

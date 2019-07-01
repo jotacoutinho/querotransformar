@@ -37,10 +37,10 @@ class ListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let servicesViewController = ServicesViewController()
+        //let servicesViewController = ServicesViewController()
         
         //get content info
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ListCell
+        //let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ListCell
         
         //FIXME: when error occurs, will donwload first known item
         showLoadingView()
@@ -78,7 +78,7 @@ class ListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellId", for: indexPath) as! ListCell
-        cell.nameLabel.text = Client.shared.itemList[indexPath.item] as! String
+        cell.nameLabel.text = Client.shared.itemList[indexPath.item] as? String
         return cell
     }
     

@@ -38,7 +38,7 @@ class MainViewController: UICollectionViewController, UICollectionViewDelegateFl
         DispatchQueue.main.async{
             //FIXME
             let data = try? Data(contentsOf: URL(string: (Client.shared.item?.urlFoto)!)!)
-            print(Client.shared.item?.urlFoto)
+            //print(Client.shared.item?.urlFoto)
             view.image = UIImage(data: data!)
         }
         view.translatesAutoresizingMaskIntoConstraints = false

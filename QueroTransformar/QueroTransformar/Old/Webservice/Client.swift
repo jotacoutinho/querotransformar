@@ -26,7 +26,7 @@ class Client{
         let urlString = "http://dev.4all.com:3003/tarefa"
         
         let request : NSMutableURLRequest = NSMutableURLRequest()
-        request.url = NSURL(string: urlString) as! URL
+        request.url = NSURL(string: urlString)! as URL
         request.httpMethod = "GET"
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -55,7 +55,7 @@ class Client{
                 //bad request
                 break
             default:
-                print("GET request got response \(statusCode)")
+                print("GET request got response \(String(describing: statusCode))")
                 completionHandler(false)
             }
             }.resume()
@@ -65,7 +65,7 @@ class Client{
         let urlString = "http://dev.4all.com:3003/tarefa/\(id)"
         print("requesting url: \(urlString)")
         let request : NSMutableURLRequest = NSMutableURLRequest()
-        request.url = NSURL(string: urlString) as! URL
+        request.url = (NSURL(string: urlString)! as URL)
         request.httpMethod = "GET"
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -104,7 +104,7 @@ class Client{
                     break
                 default:
                     completionHandler(false)
-                    print("GET request got response \(statusCode)")
+                    print("GET request got response \(String(describing: statusCode))")
                 }
         }.resume()
     }
