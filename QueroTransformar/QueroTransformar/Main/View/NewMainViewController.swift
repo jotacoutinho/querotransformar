@@ -23,12 +23,13 @@ class NewMainViewController: UIViewController {
     
     @IBOutlet private weak var tableView: UITableView! {
         didSet {
-            tableView.backgroundColor = UIColor.clear
             tableView.delegate = self
             tableView.dataSource = self
             tableView.separatorStyle = .none
+            tableView.tableFooterView = UIView()
+            tableView.estimatedRowHeight = 140
             tableView.rowHeight = UITableView.automaticDimension
-            tableView.estimatedRowHeight = 300
+            tableView.backgroundColor = UIColor.clear
             tableView.register(UINib(nibName: "MainViewHeader", bundle: nil), forCellReuseIdentifier: "headerCellId")
             tableView.register(UINib(nibName: "MainViewCenter", bundle: nil), forCellReuseIdentifier: "centerCellId")
             tableView.register(UINib(nibName: "MainViewComment", bundle: nil), forCellReuseIdentifier: "commentCellId")
@@ -41,14 +42,12 @@ class NewMainViewController: UIViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = false
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 203.0/255.0, green: 138.0/255.0, blue: 25.0/255.0, alpha: 1.0)
         self.navigationController?.navigationBar.tintColor = .white
-        
+
         viewModel.delegate = self
         loadItem(id: id)
-        
     }
     
     func configureNavBar(){
-        
         //title setup (image + text)
         let titleView = UIView()
         let titleLabel = UILabel()
@@ -79,13 +78,7 @@ class NewMainViewController: UIViewController {
         titleView.addSubview(titleLabel)
         titleView.sizeToFit()
         
-        //constraints
-        //self.navigationController?.navigationItem.titleView?.centerXAnchor.constraint(equalTo: (self.navigationController?.navigationBar.centerXAnchor)!).isActive = true
-        //self.navigationController?.navigationItem.titleView?.centerYAnchor.constraint(equalTo: (self.navigationController?.navigationBar.centerYAnchor)!).isActive = true
-        
-        //self.navigationController?.navigationBar.backItem?.backBarButtonItem?.image = UIImage(named: "back_button")
-        self.navigationItem.backBarButtonItem?.tintColor = UIColor.red
-        self.navigationController?.navigationItem.titleView?.addSubview(titleView)
+        self.navigationItem.titleView = titleView
     }
     
     func loadItem(id: String){
@@ -129,15 +122,9 @@ class NewMainViewController: UIViewController {
         self.loadingController.stopAnimating()
     }
     
-    @objc func pressedBackButton(){
-        self.dismiss(animated: true)
+    @IBAction func backButtonPressed(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
     }
-    
-    
-    
-    
-    
-    
 }
 
 extension NewMainViewController: MainViewModelDelegate{
@@ -196,15 +183,23 @@ extension NewMainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if(indexPath.item == 0){
+            //tableView.estimatedRowHeight = 300
             return 300
         } else if(indexPath.item == 1){
+            //tableView.estimatedRowHeight = 396
             return 396
         } else if(indexPath.item >= 2){
+            //tableView.estimatedRowHeight = 140
             return 140
         }
-        
+
         return 140
+        //return UITableView.automaticDimension
     }
+    
+//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//    }
     
 }
 
@@ -233,6 +228,4 @@ extension NewMainViewController: MainViewCenterDelegate{
             tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.middle, animated: true)
         }
     }
-    
-    
 }

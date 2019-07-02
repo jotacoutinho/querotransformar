@@ -38,6 +38,8 @@ class MainViewCenter: UITableViewCell {
     @IBOutlet weak var descriptionLabel : UILabel! {
         didSet{
             descriptionLabel.backgroundColor = UIColor.clear
+            descriptionLabel.numberOfLines = 0
+            print(descriptionLabel.frame.height)
         }
     }
     

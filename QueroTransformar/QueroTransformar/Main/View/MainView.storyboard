@@ -33,7 +33,13 @@
                         <viewLayoutGuide key="safeArea" id="F5s-FI-oYC"/>
                     </view>
                     <navigationItem key="navigationItem" id="j50-oQ-3ya">
-                        <barButtonItem key="rightBarButtonItem" image="search_button" id="Apt-3n-U4b"/>
+                        <barButtonItem key="leftBarButtonItem" image="back_button" id="OBI-x9-YBl" userLabel="Back Button">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <connections>
+                                <action selector="backButtonPressed:" destination="pDE-WA-dJZ" id="uNr-hi-J2v"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="search_button" id="Apt-3n-U4b" userLabel="Search Button"/>
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="r7m-4b-LyN" id="OX6-0G-76N"/>
@@ -41,10 +47,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="apH-uh-dff" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="596" y="-131.78410794602701"/>
+            <point key="canvasLocation" x="1535.2" y="-131.78410794602701"/>
         </scene>
     </scenes>
     <resources>
+        <image name="back_button" width="37.5" height="37.5"/>
         <image name="search_button" width="11.520000457763672" height="10.800000190734863"/>
     </resources>
 </document>
