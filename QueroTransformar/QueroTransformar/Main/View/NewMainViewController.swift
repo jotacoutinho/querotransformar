@@ -133,6 +133,11 @@ class NewMainViewController: UIViewController {
         self.dismiss(animated: true)
     }
     
+    
+    
+    
+    
+    
 }
 
 extension NewMainViewController: MainViewModelDelegate{
@@ -178,7 +183,7 @@ extension NewMainViewController: UITableViewDelegate, UITableViewDataSource {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: "centerCellId", for: indexPath) as? MainViewCenter else{
                     return UITableViewCell()
                 }
-                cell.configure(for: item)
+                cell.configure(for: item, withDelegate: self)
             } else if(indexPath.item >= 2){
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: "commentCellId", for: indexPath) as? MainViewComment else{
                     return UITableViewCell()
@@ -200,5 +205,34 @@ extension NewMainViewController: UITableViewDelegate, UITableViewDataSource {
         
         return 140
     }
+    
+}
+
+extension NewMainViewController: MainViewCenterDelegate{
+    func makeCall() {
+        guard let url = URL(string: "telprompt://" + (viewModel.item?.telefone)!) else{
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+    
+    func presentServices() {
+        let viewController = UIStoryboard(name: "ServicesView", bundle: nil).instantiateViewController(withIdentifier: "NewServicesViewController") 
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
+    
+    func showAddress() {
+        let alert = UIAlertController(title: "Endereço", message: viewModel.item?.endereco ?? "Rua dos Mockados, 41", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Descartar", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    func scrollToCommentSection() {
+        let indexPath = IndexPath(row: 2 , section: 0)
+        if(tableView.numberOfRows(inSection: 0) > 2){
+            tableView.scrollToRow(at: indexPath, at: UITableView.ScrollPosition.middle, animated: true)
+        }
+    }
+    
     
 }

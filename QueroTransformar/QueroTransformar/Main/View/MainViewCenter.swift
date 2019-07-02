@@ -9,33 +9,31 @@
 import UIKit
 import MapKit
 
+protocol MainViewCenterDelegate: AnyObject{
+    func makeCall()
+    func presentServices()
+    func showAddress()
+    func scrollToCommentSection()
+}
+
 class MainViewCenter: UITableViewCell {
+    weak var delegate: MainViewCenterDelegate?
     
-    @IBOutlet weak var callButton : UIButton! {
-        didSet{
-        }
+    @IBAction func makeCall(_ sender: Any) {
+        self.delegate?.makeCall()
     }
     
-    @IBOutlet weak var servicesButton : UIButton! {
-        didSet{
-        }
+    @IBAction func presentServices(_ sender: Any) {
+         self.delegate?.presentServices()
     }
     
-    @IBOutlet weak var locationButton : UIButton! {
-        didSet{
-        }
+    @IBAction func showAddress(_ sender: Any) {
+         self.delegate?.showAddress()
     }
     
-    @IBOutlet weak var commentsButton : UIButton! {
-        didSet{
-        }
+    @IBAction func scrollToCommentSection(_ sender: Any) {
+         self.delegate?.scrollToCommentSection()
     }
-    
-    @IBOutlet weak var favoritesButton : UIButton! {
-        didSet{
-        }
-    }
-    
     
     @IBOutlet weak var descriptionLabel : UILabel! {
         didSet{
@@ -58,7 +56,8 @@ class MainViewCenter: UITableViewCell {
         self.backgroundColor = UIColor.clear
     }
     
-    func configure(for item: Item){
+    func configure(for item: Item, withDelegate delegate: MainViewCenterDelegate){
+        self.delegate = delegate
         self.descriptionLabel.text = item.texto
         self.mapLabel.text = item.endereco
         
