@@ -72,5 +72,6 @@ class MainViewComment: UITableViewCell {
         default:
             self.noteImageView.image = UIImage(named: "5star_nobg")
         }
+        self.backgroundColor = UIColor.red
     }
 }

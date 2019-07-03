@@ -39,7 +39,6 @@ class MainViewCenter: UITableViewCell {
         didSet{
             descriptionLabel.backgroundColor = UIColor.clear
             descriptionLabel.numberOfLines = 0
-            print(descriptionLabel.frame.height)
         }
     }
     

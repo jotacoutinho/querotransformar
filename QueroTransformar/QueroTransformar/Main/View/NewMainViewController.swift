@@ -183,23 +183,23 @@ extension NewMainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if(indexPath.item == 0){
-            //tableView.estimatedRowHeight = 300
             return 300
         } else if(indexPath.item == 1){
-            //tableView.estimatedRowHeight = 396
             return 396
         } else if(indexPath.item >= 2){
-            //tableView.estimatedRowHeight = 140
-            return 140
+            return UITableView.automaticDimension
         }
 
-        return 140
-        //return UITableView.automaticDimension
+        return UITableView.automaticDimension
     }
     
-//    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return UITableView.automaticDimension
-//    }
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        if(indexPath.item <= 2){
+            return UITableView.automaticDimension
+        } else{
+            return 140
+        }
+    }
     
 }
 
