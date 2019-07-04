@@ -23,6 +23,8 @@ class NewListViewController: UIViewController {
             tableView.delegate = self
             tableView.dataSource = self
             tableView.register(UINib(nibName: "ListViewCell", bundle: nil), forCellReuseIdentifier: "cellId")
+            tableView.rowHeight = UITableView.automaticDimension
+            tableView.estimatedRowHeight = 70
         }
     }
     
@@ -121,6 +123,6 @@ extension NewListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 70
+        return UITableView.automaticDimension
     }
 }

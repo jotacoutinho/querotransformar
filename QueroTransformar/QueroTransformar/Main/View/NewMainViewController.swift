@@ -27,7 +27,7 @@ class NewMainViewController: UIViewController {
             tableView.dataSource = self
             tableView.separatorStyle = .none
             tableView.tableFooterView = UIView()
-            tableView.estimatedRowHeight = 140
+            tableView.estimatedRowHeight = 200
             tableView.rowHeight = UITableView.automaticDimension
             tableView.backgroundColor = UIColor.clear
             tableView.register(UINib(nibName: "MainViewHeader", bundle: nil), forCellReuseIdentifier: "headerCellId")
@@ -158,27 +158,23 @@ extension NewMainViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        
+        var cell: UITableViewCell? = nil
         if let item = viewModel.item{
             if(indexPath.item == 0){
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: "headerCellId", for: indexPath) as? MainViewHeader else{
-                    return UITableViewCell()
-                }
-                cell.configure(for: item)
+                let cellAux = tableView.dequeueReusableCell(withIdentifier: "headerCellId", for: indexPath) as? MainViewHeader
+                cellAux?.configure(for: item)
+                cell = cellAux
             } else if(indexPath.item == 1){
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: "centerCellId", for: indexPath) as? MainViewCenter else{
-                    return UITableViewCell()
-                }
-                cell.configure(for: item, withDelegate: self)
+                let cellAux = tableView.dequeueReusableCell(withIdentifier: "centerCellId", for: indexPath) as? MainViewCenter
+                cellAux?.configure(for: item, withDelegate: self)
+                cell = cellAux
             } else if(indexPath.item >= 2){
-                guard let cell = tableView.dequeueReusableCell(withIdentifier: "commentCellId", for: indexPath) as? MainViewComment else{
-                    return UITableViewCell()
-                }
-                cell.configure(for: item.comentarios[indexPath.item - 2])
+                let cellAux = tableView.dequeueReusableCell(withIdentifier: "commentCellId", for: indexPath) as? MainViewComment
+                cellAux?.configure(for: item.comentarios[indexPath.item - 2])
+                cell = cellAux
             }
         }
-        return cell
+        return cell ?? UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

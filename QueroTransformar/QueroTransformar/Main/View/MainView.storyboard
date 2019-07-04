@@ -14,23 +14,23 @@
         <scene sceneID="nqd-6f-RZw">
             <objects>
                 <viewController storyboardIdentifier="NewMainViewController" id="pDE-WA-dJZ" customClass="NewMainViewController" customModule="QueroTransformar" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="dYW-WX-zY9">
+                    <view key="view" contentMode="scaleToFill" id="XaX-TS-ZNy">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="r7m-4b-LyN">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0Go-hF-jiR">
                                 <rect key="frame" x="0.0" y="20" width="375" height="647"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="r7m-4b-LyN" firstAttribute="top" secondItem="F5s-FI-oYC" secondAttribute="top" id="F75-4j-FgW"/>
-                            <constraint firstItem="F5s-FI-oYC" firstAttribute="bottom" secondItem="r7m-4b-LyN" secondAttribute="bottom" id="KqQ-Qf-O7P"/>
-                            <constraint firstItem="r7m-4b-LyN" firstAttribute="leading" secondItem="F5s-FI-oYC" secondAttribute="leading" id="MOQ-Sa-5lx"/>
-                            <constraint firstAttribute="trailing" secondItem="r7m-4b-LyN" secondAttribute="trailing" id="u7G-nw-1Lu"/>
+                            <constraint firstItem="0Go-hF-jiR" firstAttribute="bottom" secondItem="luX-Et-fhG" secondAttribute="bottom" id="CCh-5A-uzA"/>
+                            <constraint firstItem="0Go-hF-jiR" firstAttribute="leading" secondItem="luX-Et-fhG" secondAttribute="leading" id="TqP-d6-2i4"/>
+                            <constraint firstItem="0Go-hF-jiR" firstAttribute="top" secondItem="luX-Et-fhG" secondAttribute="top" id="ceJ-XV-SFs"/>
+                            <constraint firstItem="0Go-hF-jiR" firstAttribute="trailing" secondItem="luX-Et-fhG" secondAttribute="trailing" id="hOe-wW-gN7"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="F5s-FI-oYC"/>
+                        <viewLayoutGuide key="safeArea" id="luX-Et-fhG"/>
                     </view>
                     <navigationItem key="navigationItem" id="j50-oQ-3ya">
                         <barButtonItem key="leftBarButtonItem" image="back_button" id="OBI-x9-YBl" userLabel="Back Button">
@@ -42,7 +42,7 @@
                         <barButtonItem key="rightBarButtonItem" image="search_button" id="Apt-3n-U4b" userLabel="Search Button"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="tableView" destination="r7m-4b-LyN" id="OX6-0G-76N"/>
+                        <outlet property="tableView" destination="0Go-hF-jiR" id="BwT-US-LWp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="apH-uh-dff" userLabel="First Responder" sceneMemberID="firstResponder"/>
