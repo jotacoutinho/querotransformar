@@ -41,7 +41,6 @@
                                 </constraints>
                                 <state key="normal" image="services_button"/>
                                 <connections>
-                                    <action selector="makeCall:" destination="VtN-Z3-C30" eventType="touchUpInside" id="jCQ-65-722"/>
                                     <action selector="presentServices:" destination="VtN-Z3-C30" eventType="touchUpInside" id="Dkb-lk-iIp"/>
                                 </connections>
                             </button>
@@ -53,7 +52,6 @@
                                 </constraints>
                                 <state key="normal" image="location_button"/>
                                 <connections>
-                                    <action selector="makeCall:" destination="VtN-Z3-C30" eventType="touchUpInside" id="aUn-GL-0Lf"/>
                                     <action selector="showAddress:" destination="VtN-Z3-C30" eventType="touchUpInside" id="5Az-XP-v2g"/>
                                 </connections>
                             </button>
@@ -65,7 +63,6 @@
                                 </constraints>
                                 <state key="normal" image="comments_button"/>
                                 <connections>
-                                    <action selector="makeCall:" destination="VtN-Z3-C30" eventType="touchUpInside" id="EhQ-5J-RWT"/>
                                     <action selector="scrollToCommentSection:" destination="VtN-Z3-C30" eventType="touchUpInside" id="GYm-kS-cKy"/>
                                 </connections>
                             </button>
@@ -76,9 +73,6 @@
                                     <constraint firstAttribute="width" constant="50" id="zSa-GK-npC"/>
                                 </constraints>
                                 <state key="normal" image="favorites_button"/>
-                                <connections>
-                                    <action selector="makeCall:" destination="VtN-Z3-C30" eventType="touchUpInside" id="zRX-JV-a6A"/>
-                                </connections>
                             </button>
                         </subviews>
                     </stackView>
